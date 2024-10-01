@@ -14,7 +14,9 @@
     "url": "https://tailadmin.com"
   },
   "dependencies": {
+    "@vitejs/plugin-react-swc": "^3.7.1",
     "apexcharts": "^3.41.0",
+    "axios": "^1.7.7",
     "headlessui": "^0.0.0",
     "jsvectormap": "^1.5.3",
     "match-sorter": "^6.3.1",
