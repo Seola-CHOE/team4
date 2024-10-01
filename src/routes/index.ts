@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import productRoute from './product.ts';
+import productRouter from './product.ts';
 
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
@@ -63,5 +63,5 @@ const coreRoutes = [
 
 ];
 
-const routes = [...coreRoutes, ...productRoute];
+const routes = [...coreRoutes, ...productRouter];
 export default routes;

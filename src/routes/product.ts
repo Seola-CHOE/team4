@@ -1,11 +1,10 @@
 import { lazy } from 'react';
 
-
 const ProductIndex  = lazy(() => import('../pages/Product/IndexPage'));
-const ProductList = lazy(() => import('../pages/Product/ListPage'));
-const ProductAdd = lazy(() => import('../pages/Product/AddPage'));
+const ProductList = lazy(() => import('../pages/Product/ProductListPage'));
+const ProductAdd = lazy(() => import('../pages/Product/AddPage.tsx'));
 
-const productRoute = [
+const productRouter = [
 
   {
     path: '/product',
@@ -25,4 +24,4 @@ const productRoute = [
   }
 ]
 
-export default productRoute
+export default productRouter
