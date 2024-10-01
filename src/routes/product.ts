@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import ReadPage from '../pages/Product/ReadPage.tsx';
 
 const ProductIndex  = lazy(() => import('../pages/Product/IndexPage'));
 const ProductList = lazy(() => import('../pages/Product/ProductListPage'));
@@ -21,6 +22,11 @@ const productRouter = [
     path: '/product/add',
     title: 'Product Add',
     component: ProductAdd
+  },
+  {
+    path: '/product/read',
+    title: 'Product read',
+    component: ReadPage
   }
 ]
 

@@ -1,10 +1,29 @@
 import axios from 'axios';
 
-const host:string = 'http://localhost:8089/api/products'
+const host = 'http://localhost:8089/api/products';
 
-export const getList = async (page:number = 1, size:number = 10) => {
+const header = {
+    headers: {
+        'Content-Type': 'multipart/form-data',  // 파일 전송 형식 지정
+    }
+}
 
-  const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
+export const postAdd = async (formData: FormData): Promise<number> => {
 
-  return res.data
+    const res = await axios.post(`${host}/`, formData, header)
+
+    return Number(res.data.result)
+}
+
+export const getList = async ( page:number = 1, size:number = 10) => {
+
+    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
+
+    return res.data
+
+}
+
+export const getOne = async (pno:number):Promise<IProduct> => {
+    const res = await axios.get(`${host}/${pno}`)
+    return res.data
 }
