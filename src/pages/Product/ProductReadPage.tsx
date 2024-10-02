@@ -4,7 +4,7 @@ import ProductReadComponent from '../../components/products/ProductReadComponent
 function ProductReadPage() {
   return (
     <div>
-     <ProductReadComponent></ProductReadComponent>
+      <ProductReadComponent></ProductReadComponent>
     </div>
   );
 }

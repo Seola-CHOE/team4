@@ -43,7 +43,7 @@ export const getOne = async (pno:number):Promise<IProduct> => {
 export const updateProduct = async (pno: number, formData: FormData) => {
     try {
 
-        const response = await axios.put(`${host}/update/${pno}`, formData, header);
+        const response = await axios.put(`${host}/${pno}`, formData, header);
         return response.data;
     } catch (error) {
         console.error('Failed to update product:', error);
