@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getOne } from '../../api/productAPI.ts';
 
 // 제품 정보 인터페이스 정의
@@ -24,7 +24,6 @@ function ReadPage() {
   const { pno } = useParams<{ pno: string }>(); // URL 파라미터에서 pno를 가져옴
   const [product, setProduct] = useState<IProduct>({ ...initialState });
   const [loading, setLoading] = useState<boolean>(true);
-  const navigate = useNavigate(); // navigate 훅 가져오기
 
   useEffect(() => {
     if (pno) {
@@ -36,11 +35,11 @@ function ReadPage() {
   const getProduct = async (pno: number) => {
     try {
       const productData = await getOne(pno);
-      // @ts-ignore
-      setProduct(productData); // 제품 상태 업데이트
+      //@ts-ignore
+      setProduct(productData);
       setLoading(false);
     } catch (err) {
-      console.log('Failed to fetch product:', err);
+      console.log('Failed to fetch products:', err);
       setLoading(false);
     }
   };
@@ -48,12 +47,6 @@ function ReadPage() {
   if (loading) {
     return <div>Loading...</div>;
   }
-
-  // 페이지 이동 함수
-  const moveToList = () => {
-    const queryString = new URLSearchParams({ pno: product.pno.toString() }).toString();
-    navigate('/product/list', { state: { queryString } }); // navigate 함수 호출 방식 수정
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -79,6 +72,7 @@ function ReadPage() {
             </div>
           )}
 
+
           {/* 제품 이름 */}
           <p className="mb-2">
             <strong>Product Name:</strong> {product.pname}
@@ -96,19 +90,18 @@ function ReadPage() {
         </div>
       )}
       <div className="flex justify-center mt-4 space-x-4">
-        <button
-          className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={moveToList}
-        >
+        <button className="bg-primary hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           LIST
         </button>
         <button className="bg-success hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
           CORRECTION, UPDATE
         </button>
-        <button className="bg-danger hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        <button className=" hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
           DELETE
         </button>
       </div>
+
+
     </div>
   );
 }

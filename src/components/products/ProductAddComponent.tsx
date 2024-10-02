@@ -19,36 +19,36 @@ function ProductAddComponent() {
     const [product] = useState<IProduct>({...initialState})
     const filesRef = useRef<HTMLInputElement>(null)
 
-    const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+
+        // @ts-ignore
         product[e.target.name] = e.target.value
     }
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const handleClick = () => {
         console.log(product)
 
         const files = filesRef?.current?.files
         console.log(files)
 
-        const formData:FormData = new FormData()
+        const formData: FormData = new FormData()
 
-        if(files){
-            for(let i = 0; i < files.length; i++) {
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
                 formData.append("files", files[i])
-
-                formData.append("pname", product.pname)
-                formData.append("pdesc", product.pdesc)
-                formData.append("price", product.price)
+            }
         }
+        formData.append("pname", product.pname)
+        formData.append("pdesc", product.pdesc)
+        formData.append("price", product.price)
 
-            // 파일입력 후 초기화
-            postAdd(formData).then(data => {
-                console.log(data)
-                if (filesRef.current) {
-                    filesRef.current.value = '';
-                }
-            })
-        }
+        // 파일입력 후 초기화
+        postAdd(formData).then(data => {
+            console.log(data)
+            if (filesRef.current) {
+                filesRef.current.value = '';
+            }
+        })
     }
 
 
@@ -166,5 +166,6 @@ function ProductAddComponent() {
 
     );
 }
+
 
 export default ProductAddComponent;
