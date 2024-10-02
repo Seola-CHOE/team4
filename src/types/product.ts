@@ -13,12 +13,25 @@ export interface IProduct {
   uploadFileNames: IProductImage[];
 }
 
+// export interface IPageResponse {
+//   content: IProduct[],
+//   totalElements: number,
+//   number: number,
+//   first: boolean
+//   last: boolean
+//   size: number
+//   totalPages: number
+// }
+
 export interface IPageResponse {
-  content: IProduct[],
-  totalElements: number,
-  number: number,
-  first: boolean
-  last: boolean
-  size: number
-  totalPages: number
+  dtoList: IProduct[]; // 제품 리스트
+  totalElements: number;
+  number: number;
+  first: boolean;
+  last: boolean;
+  size: number;
+  totalPages: number;
+  prev: boolean; // 이전 페이지 존재 여부
+  next: boolean; // 다음 페이지 존재 여부
+  pageNumList: number[]; // 페이지 번호 리스트
 }

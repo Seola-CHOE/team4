@@ -1,7 +1,6 @@
 import { ITodo } from '../../types/todo.ts';
 import useTodoList from '../../hooks/useTodoList.ts';
 
-
 function TodoListComponent() {
 
   const { pageResponse,moveToRead} = useTodoList()

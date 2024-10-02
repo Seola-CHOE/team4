@@ -15,22 +15,26 @@ const initialState = {
   pno: 0,
   pname: '',
   pdesc: '',
-  price: 0
-}
+  price: 0,
+};
 
 function ProductListComponent() {
-
-  const [productList, setProductList] = useState<IProduct[]>([{...initialState}]);
+  const [productList, setProductList] = useState<IProduct[]>([]); // 초기값을 빈 배열로 설정
   const [pageResponse, setPageResponse] = useState<IPageResponse>();
+  const [query, setQuery] = useSearchParams(); // useSearchParams를 추가
+  const page = Number(query.get("page")) || 1; // query에서 page 값을 가져옴
 
-  const [query, setQuery] = useSearchParams();
-  const page = query.get("page") || 1;
+  const changePage = (pageNum: number) => {
+    query.set("page", String(pageNum));
+    setQuery(query);
+  };
 
   useEffect(() => {
     const fetchProductList = async () => {
-      const response = await getProductList(page);
-      setProductList(response.dtoList);  // Assuming dtoList is the key holding the products
-      setPageResponse(response.pageResponse);
+      const response: IPageResponse = await getProductList(page);
+      console.log(response);
+      setProductList(response.dtoList); // Assuming dtoList is the key holding the products
+      setPageResponse(response);
     };
 
     fetchProductList();
@@ -63,7 +67,7 @@ function ProductListComponent() {
         )}
         </tbody>
       </table>
-      {pageResponse && <PageComponent pageResponse={pageResponse} />}
+      {pageResponse && <PageComponent pageResponse={pageResponse} changePage={changePage} />} {/* changePage 전달 */}
     </div>
   );
 }
