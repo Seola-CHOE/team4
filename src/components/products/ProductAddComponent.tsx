@@ -1,7 +1,6 @@
 import {ChangeEvent, useRef, useState} from "react";
 
 import {postAdd} from "../../api/productAPI.ts";
-import {useNavigate} from "react-router-dom";
 
 const initialState = {
     pname: '',

@@ -17,9 +17,9 @@ export const postAdd = async (formData: FormData): Promise<number> => {
 }
 
 // page 처리 아직 안 됨
-export const getProductList = async () => {
+export const getProductList = async ( page:number = 1, size:number = 10) => {
 
-    const res = await axios.get(`${host}/list`)
+    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
     return res.data
 
 }
@@ -32,8 +32,31 @@ export const getList = async ( page:number = 1, size:number = 10) => {
     return res.data
 
 }
-
+//read api
 export const getOne = async (pno:number):Promise<IProduct> => {
     const res = await axios.get(`${host}/${pno}`)
     return res.data
 }
+
+// 업데이트 API
+export const updateProduct = async (pno: number, formData: FormData) => {
+    try {
+
+        const response = await axios.put(`${host}/update/${pno}`, formData, header);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to update product:', error);
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외던짐
+    }
+};
+
+// 삭제API
+export const deleteProduct = async (pno: number) => {
+    try {
+        const response = await axios.delete(`${host}/delete/${pno}`);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete product:', error);
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외던짐
+    }
+};
