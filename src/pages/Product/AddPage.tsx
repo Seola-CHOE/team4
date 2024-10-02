@@ -1,8 +1,14 @@
+import AddComponent from "../../components/product/AddComponent.tsx";
 
 function AddPage() {
+
+
   return (
     <div>
-      <h1>Add Page</h1>
+        <div>
+            <AddComponent></AddComponent>
+        </div>
+
     </div>
   );
 }
