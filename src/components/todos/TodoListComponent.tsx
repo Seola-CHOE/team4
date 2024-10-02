@@ -1,5 +1,6 @@
 import { ITodo } from '../../types/todo.ts';
 import useTodoList from '../../hooks/useTodoList.ts';
+import TableThree from "../TableThree.tsx";
 
 
 function TodoListComponent() {
@@ -28,6 +29,7 @@ function TodoListComponent() {
 
       <ul>{listLI}</ul>
 
+    <TableThree pageResponse={pageResponse}/>
 
     </div>
   );
