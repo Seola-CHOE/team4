@@ -1,6 +1,7 @@
 import {ChangeEvent, useRef, useState} from "react";
 
 import {postAdd} from "../../api/productAPI.ts";
+import {useNavigate} from "react-router-dom";
 
 const initialState = {
     pname: '',
@@ -16,16 +17,23 @@ interface IProduct {
 
 function ProductAddComponent() {
 
-    const [product] = useState<IProduct>({...initialState})
+    const [product, setproduct] = useState<IProduct>({...initialState})
     const filesRef = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate()
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setproduct(prev => ({
+            ...prev,
+            [name]: value
+        }));
 
         // @ts-ignore
-        product[e.target.name] = e.target.value
+        // product[e.target.name] = e.target.value
     }
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
         console.log(product)
 
         const files = filesRef?.current?.files
@@ -48,6 +56,11 @@ function ProductAddComponent() {
             if (filesRef.current) {
                 filesRef.current.value = '';
             }
+            // 등록이 완료되면 상품 리스트 페이지로 이동
+            navigate('/product/list');
+        }).catch(error => {
+            console.error("Failed to add product:", error);
+            // 오류 처리 로직 추가 가능
         })
     }
 
