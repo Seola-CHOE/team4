@@ -1,6 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
-/** @type {import('tailwindcss').Config} */
+/** @types {import('tailwindcss').Config} */
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   darkMode: 'class',
@@ -44,6 +44,10 @@ module.exports = {
       success: '#219653',
       danger: '#D34053',
       warning: '#FFA70B',
+      red: defaultTheme.colors.red,
+      blue: defaultTheme.colors.blue,
+      green: defaultTheme.colors.green,
+      yellow: defaultTheme.colors.yellow,
     },
     screens: {
       '2xsm': '375px',
