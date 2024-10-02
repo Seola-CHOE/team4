@@ -1,6 +1,7 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import Modal from 'react-modal'; // Modal import 추가
 
 import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
@@ -9,6 +10,9 @@ import Loader from './common/Loader';
 import routes from './routes';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
+
+// 애플리케이션의 루트 요소 설정
+Modal.setAppElement('#root'); // index.html의 root 요소 설정
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
