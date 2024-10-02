@@ -38,7 +38,7 @@ function PageComponent({pageResponse}: Props): ReactElement {
     }
 
     const lis = pageNums.map(num => <li
-        className='px-4 py-2 text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
+        className='px-4 py-2 text-#64748b bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
         key={num}
         onClick={() => changePage(num)}
     >
