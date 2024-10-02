@@ -1,10 +1,16 @@
+import TodoListComponent from '../../components/todos/TodoListComponent.tsx';
 
 
 function TodoListPage() {
   return (
-    <div>
-      <div>list</div>
-    </div>
+    <>
+      <div>
+        <div>Todo List Page</div>
+      </div>
+
+
+      <TodoListComponent/>
+    </>
   );
 }
 
