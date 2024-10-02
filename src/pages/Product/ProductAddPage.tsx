@@ -1,6 +1,8 @@
-import ProductAddComponent from "../../components/Product/ProductAddComponent.tsx";
+import ProductAddComponent from "../../components/product/ProductAddComponent.tsx";
 
-function AddPage() {
+
+
+function ProductAddPage() {
 
 
   return (
@@ -13,4 +15,4 @@ function AddPage() {
   );
 }
 
-export default AddPage;
+export default ProductAddPage;

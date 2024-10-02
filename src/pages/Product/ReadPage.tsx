@@ -1,4 +1,7 @@
-import ReadComponent from '../../components/Product/ProductReadComponent.tsx';
+import ReadComponent from '../../components/product/ProductReadComponent.tsx';
+
+
+
 
 
 function ReadPage() {
