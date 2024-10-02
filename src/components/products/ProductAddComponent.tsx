@@ -30,6 +30,24 @@ function ProductAddComponent() {
 
         const files = filesRef?.current?.files
         console.log(files)
+        const formData: FormData = new FormData()
+
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
+                formData.append("files", files[i])
+            }
+        }
+        formData.append("pname", product.pname)
+        formData.append("pdesc", product.pdesc)
+        formData.append("price", product.price)
+
+        // 파일입력 후 초기화
+        postAdd(formData).then(data => {
+            console.log(data)
+            if (filesRef.current) {
+                filesRef.current.value = '';
+            }
+        })
 
         const formData:FormData = new FormData()
 
@@ -50,6 +68,7 @@ function ProductAddComponent() {
                 }
             })
         }
+
     }
 
 

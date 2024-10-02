@@ -1,15 +1,11 @@
-import ProductAddComponent from "../../components/products/ProductAddComponent.tsx";
-
+import ProductAddComponent from '../../components/products/ProductAddComponent.tsx';
 
 function ProductAddPage() {
 
 
   return (
     <div>
-      <div>
-        <div>Product Add Page</div>
-        <ProductAddComponent></ProductAddComponent>
-      </div>
+          <ProductAddComponent></ProductAddComponent>
     </div>
   );
 }

@@ -39,7 +39,7 @@ function ReadPage() {
       setProduct(productData);
       setLoading(false);
     } catch (err) {
-      console.log('Failed to fetch product:', err);
+      console.log('Failed to fetch products:', err);
       setLoading(false);
     }
   };
@@ -100,7 +100,6 @@ function ReadPage() {
           DELETE
         </button>
       </div>
-
 
     </div>
   );
