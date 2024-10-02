@@ -1,11 +1,11 @@
 import { lazy } from 'react';
-import productRouter from './product.ts';
+import productRoute from './product.ts';
 
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
 const FormElements = lazy(() => import('../pages/Form/FormElements'));
 const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
-const Profile = lazy(() => import('../pages/Profile'));
+const Todos = lazy(() => import('../pages/Todo'));
 const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
@@ -20,9 +20,9 @@ const coreRoutes = [
     component: Calendar,
   },
   {
-    path: '/profile',
-    title: 'Profile',
-    component: Profile,
+    path: '/todo',
+    title: 'todos',
+    component: Todos,
   },
   {
     path: '/forms/form-elements',
@@ -64,4 +64,5 @@ const coreRoutes = [
 ];
 
 const routes = [...coreRoutes, ...productRouter];
+const routes = [...coreRoutes, ...productRoute,...todoRouter];
 export default routes;
