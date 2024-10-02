@@ -1,6 +1,6 @@
 import { getProductList } from '../../api/productAPI.ts';
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface IProduct {
   pno: number;
@@ -17,6 +17,9 @@ const initialState = {
 }
 
 function ProductListComponent() {
+
+  const navigate = useNavigate()
+
   const [productList, setProductList] = useState<IProduct[]>([{...initialState}]); // 초기값을 빈 배열로 설정
   const [query, setQuery] = useSearchParams(); // useSearchParams를 추가
   const page = Number(query.get("page")) || 1; // query에서 page 값을 가져옴
@@ -25,6 +28,12 @@ function ProductListComponent() {
     query.set("page", String(pageNum));
     setQuery(query);
   };
+
+  const moveToRead = (pno: number | undefined) => {
+    navigate({
+      pathname: `/product/read/${pno}`
+    })
+  }
 
   useEffect(() => {
     const fetchProductList = async () => {
@@ -50,7 +59,7 @@ function ProductListComponent() {
         <tbody>
         {productList.length > 0 ? (
           productList.map((product) => (
-            <tr key={product.pno} className="border-b border-gray-200">
+            <tr onClick={() => moveToRead(product.pno)} key={product.pno} className="border-b border-gray-200">
               <td className="px-4 py-4 text-gray-700 font-medium">{product.pname}</td>
               <td className="px-4 py-4 text-gray-600">{product.pdesc}</td>
               <td className="px-4 py-4 text-gray-700">${product.price.toLocaleString()}</td>

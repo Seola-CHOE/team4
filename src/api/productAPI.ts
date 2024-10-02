@@ -32,6 +32,7 @@ export const getList = async ( page:number = 1, size:number = 10) => {
     return res.data
 
 }
+
 //read api
 export const getOne = async (pno:number):Promise<IProduct> => {
     const res = await axios.get(`${host}/${pno}`)
@@ -53,7 +54,7 @@ export const updateProduct = async (pno: number, formData: FormData) => {
 // 삭제API
 export const deleteProduct = async (pno: number) => {
     try {
-        const response = await axios.delete(`${host}/delete/${pno}`);
+        const response = await axios.delete(`${host}/${pno}`);
         return response.data;
     } catch (error) {
         console.error('Failed to delete product:', error);

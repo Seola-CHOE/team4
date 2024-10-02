@@ -1,5 +1,4 @@
-
-import ProductReadComponent from '../../components/products/ProductReadComponent.tsx';
+import ProductReadComponent from '../../components/products/ProductReadComponent';
 
 
 function ProductReadPage() {
