@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { IProduct } from '../type/product.ts';
 
 const host = 'http://localhost:8089/api/products';
 

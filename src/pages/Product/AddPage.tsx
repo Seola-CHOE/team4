@@ -1,4 +1,4 @@
-import AddComponent from "../../components/product/AddComponent.tsx";
+import AddComponent from "../../components/Product/AddComponent";
 
 function AddPage() {
 

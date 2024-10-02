@@ -2,7 +2,7 @@ export interface IProduct {
     pno?: number;
     pdesc: string;
     pname: string;
-    price: string;
+    price: number;
     del_flag: boolean;
 }
 
