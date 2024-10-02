@@ -1,4 +1,4 @@
-import ProductListComponent from '../../components/Product/ProductListComponent.tsx';
+import ProductListComponent from '../../components/product/ProductListComponent.tsx';
 
 function ProductListPage() {
 
