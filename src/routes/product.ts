@@ -25,7 +25,7 @@ const productRoute = [
     component: ProductAdd
   },
   {
-    path: '/product/read',
+    path: '/product/read/:pno',
     title: 'Product read',
     component: ReadPage
   }
