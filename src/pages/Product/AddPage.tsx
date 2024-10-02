@@ -1,5 +1,7 @@
 import AddComponent from "../../components/product/AddComponent.tsx";
 
+
+
 function AddPage() {
 
 
