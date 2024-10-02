@@ -17,9 +17,9 @@ export const postAdd = async (formData: FormData): Promise<number> => {
 }
 
 // page 처리 아직 안 됨
-export const getProductList = async () => {
+export const getProductList = async ( page:number = 1, size:number = 10) => {
 
-    const res = await axios.get(`${host}/list`)
+    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
     return res.data
 
 }

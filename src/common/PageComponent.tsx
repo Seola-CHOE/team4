@@ -1,17 +1,16 @@
-
-import {ReactElement} from "react";
-import { useSearchParams} from "react-router-dom";
+import { ReactElement } from "react";
 import { IPageResponse } from '../types/todo.ts';
+import { useSearchParams } from 'react-router-dom';
 
 interface Props {
-    pageResponse:IPageResponse
+    pageResponse: IPageResponse;
+    changePage: (page: number) => void; // Props에 추가
 }
 
-const makeArr = (from:number, to:number): number[] => {
-
-    let arr:number[] = []
-    for (let i = from; i <= to ; i++) {
-        arr.push(i)
+const makeArr = (from: number, to: number): number[] => {
+    let arr: number[] = [];
+    for (let i = from; i <= to; i++) {
+        arr.push(i);
     }
     return arr
 }
@@ -38,7 +37,7 @@ function PageComponent({pageResponse}: Props): ReactElement {
     }
 
     const lis = pageNums.map(num => <li
-        className='px-4 py-2 text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
+        className='px-4 py-2 text-#64748b bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
         key={num}
         onClick={() => changePage(num)}
     >
@@ -51,7 +50,7 @@ function PageComponent({pageResponse}: Props): ReactElement {
             <ul className='flex justify-center items-center space-x-2 mt-6'>
 
                 { prev && <li
-                    className='px-4 py-2 text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
+                    className='px-4 py-2 text-#64748b bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
                     key={startPage -1}
                     onClick={() => changePage(startPage -1)}
                 >
@@ -60,7 +59,7 @@ function PageComponent({pageResponse}: Props): ReactElement {
 
                 {lis}
                 { next && <li
-                    className='px-4 py-2 text-white bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
+                    className='px-4 py-2 text-#64748b bg-blue-500 border border-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300'
                     key={endPage +1}
                     onClick={() => changePage(endPage + 1)}
                 >

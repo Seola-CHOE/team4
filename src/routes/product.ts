@@ -3,7 +3,7 @@ import ProductReadPage from '../pages/Product/ProductReadPage.tsx';
 
 const ProductIndex  = lazy(() => import('../pages/Product/IndexPage'));
 const ProductList = lazy(() => import('../pages/Product/ProductListPage'));
-const ProductAdd = lazy(() => import('../pages/Product/AddPage.tsx'));
+const ProductAdd = lazy(() => import('../pages/Product/ProductAddPage.tsx'));
 
 const productRouter = [
 
