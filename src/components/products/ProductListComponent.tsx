@@ -47,7 +47,7 @@ function ProductListComponent() {
         <thead>
         <tr className="bg-gray-100 text-left">
           <th className="px-4 py-2 font-semibold text-gray-600">Product Name</th>
-          <th className="px-4 py-2 font-semibold text-gray-600">Description</th>
+          <th className="px-4 py-2 font-semibold text-gray-600">Category</th>
           <th className="px-4 py-2 font-semibold text-gray-600">Price</th>
         </tr>
         </thead>
