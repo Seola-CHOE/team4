@@ -1,4 +1,4 @@
-import ReadComponents from '../../components/product/ReadComponents.tsx';
+import ReadComponent from '../../components/Product/ProductReadComponent.tsx';
 
 
 
@@ -7,7 +7,7 @@ import ReadComponents from '../../components/product/ReadComponents.tsx';
 function ReadPage() {
   return (
     <div>
-     <ReadComponents></ReadComponents>
+     <ReadComponent></ReadComponent>
     </div>
   );
 }
