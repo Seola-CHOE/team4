@@ -13,8 +13,8 @@ const initialState = {
   pno: 0,
   pname: '',
   pdesc: '',
-  price: 0,
-};
+  price: 0
+}
 
 function ProductListComponent() {
   const [productList, setProductList] = useState<IProduct[]>([{...initialState}]); // 초기값을 빈 배열로 설정

@@ -37,7 +37,7 @@ function ReadPage() {
       setProduct(productData);
       setLoading(false);
     } catch (err) {
-      console.log('Failed to fetch product:', err);
+      console.log('Failed to fetch products:', err);
       setLoading(false);
     }
   };
@@ -133,6 +133,7 @@ function ReadPage() {
         </button>
       </div>
 
+
       {/* UpdateModal 컴포넌트 추가 및 모달 상태 전달 */}
       <UpdateModal
         isCorrectionModalOpen={isUpdateModalOpen}
@@ -150,6 +151,7 @@ function ReadPage() {
         handleDelete={handleDelete} // 삭제 처리 함수 전달
         navigateToList={moveToList} // 삭제 후 리스트 페이지로 이동
       />
+
     </div>
   );
 }
