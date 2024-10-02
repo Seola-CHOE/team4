@@ -1,4 +1,5 @@
-import ReadComponent from '../../components/products/ProductReadComponent.tsx';
+import ReadComponent from '../../components/Product/ProductReadComponent.tsx';
+
 
 function ReadPage() {
   return (
@@ -9,3 +10,4 @@ function ReadPage() {
 }
 
 export default ReadPage;
+
