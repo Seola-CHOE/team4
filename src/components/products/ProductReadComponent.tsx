@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getOne } from '../../api/productAPI';
+import { deleteProduct, getOne } from '../../api/productAPI';
 import UpdateModal from '../../common/modal/UpdateModal.tsx'; // UpdateModal import
 import DeleteModal from '../../common/modal/DeleteModal.tsx'; // DeleteModal import
 import { IProduct } from '../../types/product.ts'; // IProduct 타입 import
@@ -84,7 +84,9 @@ function ReadPage() {
   };
 
   // 삭제 처리 함수
-  const handleDelete = () => {
+  const handleDelete = (pno:number) => {
+    console.log(pno);
+    deleteProduct(pno);
     setProduct({ ...initialState }); // 삭제 후 상태 초기화
     setIsDeleteModalOpen(false); // 삭제 모달 닫기
     moveToList(); // 리스트 페이지로 이동
@@ -148,7 +150,7 @@ function ReadPage() {
         isDeleteModalOpen={isDeleteModalOpen}
         closeDeleteModal={closeDeleteModal}
         selectedProduct={selectedProduct}
-        handleDelete={handleDelete} // 삭제 처리 함수 전달
+        handleDelete={()=> handleDelete(Number(pno))} // 삭제 처리 함수 전달
         navigateToList={moveToList} // 삭제 후 리스트 페이지로 이동
       />
 
