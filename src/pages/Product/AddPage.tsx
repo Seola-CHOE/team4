@@ -5,7 +5,10 @@ function AddPage() {
 
   return (
     <div>
-        <AddComponent></AddComponent>
+        <div>
+            <AddComponent></AddComponent>
+        </div>
+
     </div>
   );
 }

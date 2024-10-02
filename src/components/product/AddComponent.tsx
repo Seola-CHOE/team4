@@ -19,7 +19,7 @@ function AddComponent() {
 
 
                         </div>
-
+                        {/*상품 이름*/}
                         <div className="mb-4.5">
                             <label className="mb-2.5 block text-black dark:text-white">
                                 Product Name <span className="text-meta-1">*</span>
@@ -31,6 +31,7 @@ function AddComponent() {
                             />
                         </div>
 
+                        {/*상품 가격*/}
                         <div className="mb-4.5">
                             <label className="mb-2.5 block text-black dark:text-white">
                                 Price <span className="text-meta-1">*</span>
