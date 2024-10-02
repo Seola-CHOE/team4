@@ -1,17 +1,15 @@
 import {ChangeEvent, useRef, useState} from "react";
 
 import {postAdd} from "../../api/productAPI.ts";
+import { useNavigate } from 'react-router-dom';
+import { IProduct } from '../../types/product.ts';
 
 const initialState = {
     pname: '',
     pdesc: '',
     price: '',
-}
-
-interface IProduct {
-    pname: string;
-    pdesc: string;
-    price: string;
+    uploadFileNames: [],
+    del_flag: false
 }
 
 function ProductAddComponent() {

@@ -24,15 +24,6 @@ export const getProductList = async ( page:number = 1, size:number = 10) => {
 
 }
 
-// 이거 아님
-export const getList = async ( page:number = 1, size:number = 10) => {
-
-    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
-
-    return res.data
-
-}
-
 //read api
 export const getOne = async (pno:number):Promise<IProduct> => {
     const res = await axios.get(`${host}/${pno}`)
@@ -43,7 +34,7 @@ export const getOne = async (pno:number):Promise<IProduct> => {
 export const updateProduct = async (pno: number, formData: FormData) => {
     try {
 
-        const response = await axios.put(`${host}/update/${pno}`, formData, header);
+        const response = await axios.put(`${host}/${pno}`, formData, header);
         return response.data;
     } catch (error) {
         console.error('Failed to update product:', error);
