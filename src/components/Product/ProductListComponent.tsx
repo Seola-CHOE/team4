@@ -1,73 +1,60 @@
+import { getProductList } from '../../api/productAPI.ts';
 import { useEffect, useState } from 'react';
-import { getList } from '../../api/productAPI.ts';  // getList를 import
-import { IProduct, IPageResponse } from '../../type/product.ts';
+
+interface IProduct {
+  pno: number;
+  pname: string;
+  pdesc: string;
+  price: number;
+}
+
+const initialState = {
+  pno: 0,
+  pname: '',
+  pdesc: '',
+  price: 0
+}
 
 function ProductListComponent() {
-  const [products, setProducts] = useState<IProduct[]>([]); // 빈 배열로 초기화
-  const [loading, setLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+
+  const [productList, setProductList] = useState<IProduct[]>([{...initialState}]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data: IPageResponse = await getList(page, 10);  // 페이지와 사이즈로 호출
-        setProducts(data.content || []);  // content가 없을 경우 빈 배열로 처리
-        setTotalPages(data.totalPages || 1);  // totalPages가 없을 경우 기본값 1
-      } catch (error) {
-        console.error('Failed to fetch product list', error);
-        setProducts([]);  // 에러 발생 시 빈 배열로 설정
-      } finally {
-        setLoading(false);
-      }
+    const fetchProductList = async () => {
+      const response = await getProductList();
+      setProductList(response.dtoList);  // Assuming dtoList is the key holding the products
     };
 
-    fetchProducts();
-  }, [page]);
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setPage(newPage);
-      setLoading(true);
-    }
-  };
+    fetchProductList();
+  }, []);
 
   return (
-    <div>
-      <div>Product List Component</div>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          {products.length > 0 ? (  // products 배열이 비어있지 않은 경우만 map 실행
-            <ul>
-              {products.map((product) => (
-                <li key={product.pno}>
-                  <strong>{product.pname}</strong> - {product.price}원
-                  <p>{product.pdesc}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No products available</p>  // products 배열이 비어있는 경우
-          )}
-          <div>
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-            >
-              Previous
-            </button>
-            <span>{page} / {totalPages}</span>
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === totalPages}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      )}
+    <div className="p-6 rounded-lg bg-white shadow-md">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Product List</h2>
+      <table className="min-w-full table-auto">
+        <thead>
+        <tr className="bg-gray-100 text-left">
+          <th className="px-4 py-2 font-semibold text-gray-600">Product Name</th>
+          <th className="px-4 py-2 font-semibold text-gray-600">Description</th>
+          <th className="px-4 py-2 font-semibold text-gray-600">Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        {productList.length > 0 ? (
+          productList.map((product) => (
+            <tr key={product.pno} className="border-b border-gray-200">
+              <td className="px-4 py-4 text-gray-700 font-medium">{product.pname}</td>
+              <td className="px-4 py-4 text-gray-600">{product.pdesc}</td>
+              <td className="px-4 py-4 text-gray-700">${product.price.toLocaleString()}</td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan={3} className="text-center py-6 text-gray-500">No products available.</td>
+          </tr>
+        )}
+        </tbody>
+      </table>
     </div>
   );
 }
