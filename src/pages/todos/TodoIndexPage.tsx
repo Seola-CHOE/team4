@@ -1,4 +1,4 @@
-import {  Outlet } from 'react-router-dom';
+import { Navigate} from 'react-router-dom';
 import TodoListPage from './TodoListPage.tsx';
 
 
@@ -7,12 +7,15 @@ function TodoIndexPage() {
     <div>
       <div>Todo Index Page</div>
 
-      <div><Outlet>
-        <TodoListPage/>
+      <div><TodoListPage/></div>
 
-      </Outlet></div>
+
+
+      <Navigate to={'/todo'}></Navigate>
 
     </div>
+
+
   );
 }
 

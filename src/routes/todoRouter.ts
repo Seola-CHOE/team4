@@ -14,9 +14,15 @@ const todoRouter = [
   },
   {
     path: '/todo/list',
-    title: 'TodoList',
+    title: 'TodoIndex',
     component: TodoList
-  }
+  },
+  {
+    path: '/todo/read',
+    title: 'TodoRead',
+    component: TodoRead
+  },
+
 
 ]
 

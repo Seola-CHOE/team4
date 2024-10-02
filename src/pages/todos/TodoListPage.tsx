@@ -3,7 +3,7 @@
 function TodoListPage() {
   return (
     <div>
-      <div>list</div>
+      <div>Todo List Page</div>
     </div>
   );
 }
