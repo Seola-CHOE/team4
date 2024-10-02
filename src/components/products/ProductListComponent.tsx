@@ -1,5 +1,8 @@
 import { getProductList } from '../../api/productAPI.ts';
 import { useEffect, useState } from 'react';
+import { IPageResponse } from '../../types/product.ts';
+import { useSearchParams } from 'react-router-dom';
+import PageComponent from '../../common/PageComponent.tsx';
 
 interface IProduct {
   pno: number;
@@ -18,15 +21,20 @@ const initialState = {
 function ProductListComponent() {
 
   const [productList, setProductList] = useState<IProduct[]>([{...initialState}]);
+  const [pageResponse, setPageResponse] = useState<IPageResponse>();
+
+  const [query, setQuery] = useSearchParams();
+  const page = query.get("page") || 1;
 
   useEffect(() => {
     const fetchProductList = async () => {
-      const response = await getProductList();
+      const response = await getProductList(page);
       setProductList(response.dtoList);  // Assuming dtoList is the key holding the products
+      setPageResponse(response.pageResponse);
     };
 
     fetchProductList();
-  }, []);
+  }, [page]);
 
   return (
     <div className="p-6 rounded-lg bg-white shadow-md">
@@ -55,6 +63,7 @@ function ProductListComponent() {
         )}
         </tbody>
       </table>
+      {pageResponse && <PageComponent pageResponse={pageResponse} />}
     </div>
   );
 }
