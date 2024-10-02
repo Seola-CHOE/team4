@@ -1,5 +1,6 @@
 import { getProductList } from '../../api/productAPI.ts';
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 interface IProduct {
   pno: number;
@@ -16,17 +17,24 @@ const initialState = {
 }
 
 function ProductListComponent() {
+  const [productList, setProductList] = useState<IProduct[]>([{...initialState}]); // 초기값을 빈 배열로 설정
+  const [query, setQuery] = useSearchParams(); // useSearchParams를 추가
+  const page = Number(query.get("page")) || 1; // query에서 page 값을 가져옴
 
-  const [productList, setProductList] = useState<IProduct[]>([{...initialState}]);
+  const changePage = (pageNum: number) => {
+    query.set("page", String(pageNum));
+    setQuery(query);
+  };
 
   useEffect(() => {
     const fetchProductList = async () => {
-      const response = await getProductList();
-      setProductList(response.dtoList);  // Assuming dtoList is the key holding the products
+      const response = await getProductList(page);
+      console.log(response);
+      setProductList(response.dtoList); // Assuming dtoList is the key holding the products
     };
 
     fetchProductList();
-  }, []);
+  }, [page]);
 
   return (
     <div className="p-6 rounded-lg bg-white shadow-md">
@@ -55,6 +63,25 @@ function ProductListComponent() {
         )}
         </tbody>
       </table>
+      {/* Pagination UI */}
+      <div className="flex justify-center mt-4">
+        <ul className="flex space-x-2">
+          {[1, 2, 3].map((pageNum) => (
+            <li
+              key={pageNum}
+              className={`px-4 py-2 border rounded-md ${
+                page === pageNum
+                  ? "bg-blue-500 text-white"
+                  : "bg-white text-blue-500 hover:bg-blue-500 hover:text-white"
+              }`}
+              onClick={() => changePage(pageNum)} // 페이지 번호를 클릭하면 changePage 호출
+              style={{ cursor: "pointer" }} // 클릭 가능하도록 스타일 추가
+            >
+              {pageNum}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

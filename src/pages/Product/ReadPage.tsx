@@ -1,9 +1,5 @@
 import ReadComponent from '../../components/products/ProductReadComponent.tsx';
 
-
-
-
-
 function ReadPage() {
   return (
     <div>

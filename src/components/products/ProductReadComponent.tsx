@@ -101,7 +101,6 @@ function ReadPage() {
         </button>
       </div>
 
-
     </div>
   );
 }

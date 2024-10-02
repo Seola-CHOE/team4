@@ -1,7 +1,5 @@
 import ProductAddComponent from '../../components/products/ProductAddComponent.tsx';
 
-
-
 function ProductAddPage() {
 
 
