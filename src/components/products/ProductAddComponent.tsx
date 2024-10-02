@@ -20,11 +20,12 @@ function ProductAddComponent() {
     const filesRef = useRef<HTMLInputElement>(null)
 
     const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
+        //@ts-ignore
         product[e.target.name] = e.target.value
     }
 
-    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
+    const handleClick = () => {
+
         console.log(product)
 
         const files = filesRef?.current?.files
