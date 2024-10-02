@@ -42,6 +42,11 @@ function UpdateModal({
         // 선택된 파일이 있을 경우 FormData에 추가
         if (selectedFile) {
           formData.append('file', selectedFile);
+        } else {
+          // 기존 이미지 파일명을 유지
+          selectedProduct.uploadFileNames.forEach((s_fileName, index) => {
+            formData.append(`existingFiles[${index}]`, s_fileName);
+          });
         }
 
         // 서버에 수정된 제품 정보 전송

@@ -1,19 +1,17 @@
 import { getProductList } from '../../api/productAPI.ts';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { IProduct } from '../../types/product.ts';
 
-interface IProduct {
-  pno: number;
-  pname: string;
-  pdesc: string;
-  price: number;
-}
+
 
 const initialState = {
   pno: 0,
   pname: '',
   pdesc: '',
-  price: 0
+  price: 0,
+  uploadFileNames: [],
+  del_flag: false
 }
 
 function ProductListComponent() {
