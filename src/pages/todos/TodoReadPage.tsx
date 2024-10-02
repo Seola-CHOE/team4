@@ -3,7 +3,7 @@
 function TodoReadPage() {
   return (
     <div>
-      <div>Read</div>
+      <div>Todo Read Page</div>
     </div>
   );
 }
