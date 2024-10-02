@@ -1,5 +1,3 @@
-
-
 export interface ITodo {
     mno?: number;
     title: string;
@@ -8,11 +6,11 @@ export interface ITodo {
 }
 
 export interface IPageResponse {
-    content: ITodo[],
-    totalElements: number,
-    number: number,
-    first: boolean
-    last: boolean
-    size: number
-    totalPages: number
+  content: ITodo[],
+  totalElements: number,
+  number: number,
+  first: boolean
+  last: boolean
+  size: number
+  totalPages: number
 }
