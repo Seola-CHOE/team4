@@ -1,10 +1,10 @@
-import ReadComponents from '../../components/product/ReadComponents.tsx';
+import ReadComponent from '../../components/Product/ProductReadComponent.tsx';
 
 
 function ReadPage() {
   return (
     <div>
-     <ReadComponents></ReadComponents>
+     <ReadComponent></ReadComponent>
     </div>
   );
 }

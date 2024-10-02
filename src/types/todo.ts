@@ -1,10 +1,8 @@
-
-
 export interface ITodo {
-  mno?: number;
-  title: string;
-  writer: string;
-  dueDate: string;
+    mno?: number;
+    title: string;
+    writer: string;
+    dueDate: string;
 }
 
 export interface IPageResponse {
