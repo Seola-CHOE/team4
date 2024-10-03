@@ -9,31 +9,41 @@ const header = {
     }
 }
 
+// 상품 추가 API
 export const postAdd = async (formData: FormData): Promise<number> => {
+    const res = await axios.post(`${host}/`, formData, header);
+    return Number(res.data.result);
+};
 
-    const res = await axios.post(`${host}/`, formData, header)
+// 상품 목록 조회 API (페이징)
+export const getProductList = async (page: number = 1, size: number = 10) => {
+    const res = await axios.get(`${host}/list?page=${page}&size=${size}`);
+    return res.data;
+};
 
-    return Number(res.data.result)
-}
+// 상품 상세 조회 API
+export const getOne = async (pno: number): Promise<IProduct> => {
+    const res = await axios.get(`${host}/${pno}`);
+    return res.data;
+};
 
-// page 처리 아직 안 됨
-export const getProductList = async () => {
+export const updateProduct = async (pno: number, formData: FormData) => {
+    try {
+        const response = await axios.put(`${host}/${pno}`, formData, header);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to update product:', error);
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
+    }
+};
 
-    const res = await axios.get(`${host}/list`)
-    return res.data
-
-}
-
-// 이거 아님
-export const getList = async ( page:number = 1, size:number = 10) => {
-
-    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
-
-    return res.data
-
-}
-
-export const getOne = async (pno:number):Promise<IProduct> => {
-    const res = await axios.get(`${host}/${pno}`)
-    return res.data
-}
+// 상품 삭제 API
+export const deleteProduct = async (pno: number) => {
+    try {
+        const response = await axios.delete(`${host}/${pno}`);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to delete product:', error);
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
+    }
+};

@@ -3,6 +3,7 @@ import useTodoList from '../../hooks/useTodoList';
 import { ITodo } from '../../types/todo';
 import ModifyComponent from '../todos/TodoModifyComponent';
 import PageComponent from '../../common/PageComponent.tsx'; // 모달 컴포넌트 가져오기
+import TableThree from "../TableThree.tsx";
 
 function TodoListComponent() {
   const { pageResponse, moveToRead } = useTodoList();
