@@ -1,7 +1,7 @@
 import {ITodo} from "../types/todo.ts";
 import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
-import {getOne} from "../api/todoAPI.tsx";
+import {getOne} from "../api/todoAPI.ts";
 import LoadingComponent from "./common/LoadingComponent.tsx";
 
 const initialState:ITodo ={

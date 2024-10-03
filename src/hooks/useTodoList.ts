@@ -1,7 +1,7 @@
 import {createSearchParams, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {IPageResponse} from "../types/todo.ts";
-import {getTodoList} from "../api/todoAPI.tsx";
+import {getTodoList} from "../api/todoAPI.ts";
 
 const initialState = {
     content : [],

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useTodoList from '../../hooks/useTodoList';
 import { ITodo } from '../../types/todo';
 import ModifyComponent from '../todos/TodoModifyComponent';
@@ -9,6 +9,13 @@ function TodoListComponent() {
   const { pageResponse, moveToRead } = useTodoList();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+
+  useEffect(() => {
+    if (pageResponse) {
+      setLoading(false); // pageResponse가 로드된 후 로딩 상태 해제
+    }
+  }, [pageResponse]);
 
   // 수정된 todo를 처리하는 함수
   const handleModify = (modifiedTodo: ITodo) => {
@@ -18,9 +25,6 @@ function TodoListComponent() {
     const updatedTodos = pageResponse.content.map(todo =>
       todo.mno === modifiedTodo.mno ? modifiedTodo : todo
     );
-
-    // 여기서 상태를 업데이트하는 방법에 따라 적절히 업데이트하세요
-    // 예: setTodos(updatedTodos); // useState로 관리하는 경우
 
     setIsModalOpen(false); // 모달 닫기
     setSelectedTodo(null); // 선택된 todo 초기화
@@ -36,15 +40,19 @@ function TodoListComponent() {
     setSelectedTodo(null);
   };
 
+  if (loading) {
+    return <div>Loading...</div>; // 로딩 중일 때 표시
+  }
+
   // 중복된 mno를 가진 항목을 제거
   const uniqueMnoSet = new Set<number>();
-  const uniqueTodos = pageResponse.content.filter((todo: ITodo) => {
+  const uniqueTodos = pageResponse?.content ? pageResponse.content.filter((todo: ITodo) => {
     if (!uniqueMnoSet.has(todo.mno)) {
       uniqueMnoSet.add(todo.mno);
       return true;
     }
     return false;
-  });
+  }) : []; // pageResponse.content가 존재할 때만 filter 호출
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
@@ -60,11 +68,14 @@ function TodoListComponent() {
           </tr>
           </thead>
           <tbody>
-          {uniqueTodos.map((todo: ITodo) => {
+          {uniqueTodos.map((todo: ITodo, index) => {
             const { mno, title, writer, dueDate } = todo;
 
+            // key 값이 NaN 또는 undefined일 경우 index를 key로 사용
+            const key = mno && !isNaN(mno) ? mno : `todo-${index}`;
+
             return (
-              <tr key={mno} onClick={() => moveToRead(mno)} className="bg-gray-200 hover:bg-gray-100 border-b border-gray-300">
+              <tr key={key} onClick={() => mno !== undefined && moveToRead(mno)} className="bg-gray-200 hover:bg-gray-100 border-b border-gray-300">
                 <td className="py-4 px-4 text-center">{mno}</td>
                 <td className="py-4 px-4 text-center">{title}</td>
                 <td className="py-4 px-4 text-center">{writer}</td>
@@ -99,7 +110,8 @@ function TodoListComponent() {
           onModify={handleModify} // handleModify 전달
         />
       )}
-      <PageComponent pageResponse={pageResponse} />
+      {/* changePage prop 추가하여 오류 해결 */}
+      <PageComponent pageResponse={pageResponse} changePage={(page) => console.log("페이지 변경:", page)} />
     </div>
   );
 }
