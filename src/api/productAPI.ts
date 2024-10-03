@@ -1,63 +1,50 @@
+// src/api/productAPI.ts
 import axios from 'axios';
 import { IProduct } from '../types/product.ts';
 
-const host = 'http://localhost:8089/api/products';
+const host = 'http://localhost:8089/api/products'; // API 호스트 주소
 
 const header = {
     headers: {
-        'Content-Type': 'multipart/form-data',  // 파일 전송 형식 지정
-    }
-}
+        'Content-Type': 'multipart/form-data', // 파일 전송 형식 지정
+    },
+};
 
+// 상품 추가 API
 export const postAdd = async (formData: FormData): Promise<number> => {
+    const res = await axios.post(`${host}/`, formData, header);
+    return Number(res.data.result);
+};
 
-    const res = await axios.post(`${host}/`, formData, header)
+// 상품 목록 조회 API (페이징)
+export const getProductList = async (page: number = 1, size: number = 10) => {
+    const res = await axios.get(`${host}/list?page=${page}&size=${size}`);
+    return res.data;
+};
 
-    return Number(res.data.result)
-}
+// 상품 상세 조회 API
+export const getOne = async (pno: number): Promise<IProduct> => {
+    const res = await axios.get(`${host}/${pno}`);
+    return res.data;
+};
 
-// page 처리 아직 안 됨
-export const getProductList = async ( page:number = 1, size:number = 10) => {
-
-    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
-    return res.data
-
-}
-
-// 이거 아님
-export const getList = async ( page:number = 1, size:number = 10) => {
-
-    const res = await axios.get(`${host}/list?page=${page}&size=${size}`)
-
-    return res.data
-
-}
-
-//read api
-export const getOne = async (pno:number):Promise<IProduct> => {
-    const res = await axios.get(`${host}/${pno}`)
-    return res.data
-}
-
-// 업데이트 API
 export const updateProduct = async (pno: number, formData: FormData) => {
     try {
-
         const response = await axios.put(`${host}/${pno}`, formData, header);
         return response.data;
     } catch (error) {
         console.error('Failed to update product:', error);
-        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외던짐
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
     }
 };
 
-// 삭제API
+// 상품 삭제 API
 export const deleteProduct = async (pno: number) => {
     try {
         const response = await axios.delete(`${host}/${pno}`);
         return response.data;
     } catch (error) {
         console.error('Failed to delete product:', error);
-        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외던짐
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
     }
 };

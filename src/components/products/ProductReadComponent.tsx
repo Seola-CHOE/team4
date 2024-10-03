@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { deleteProduct, getOne } from '../../api/productAPI';
-import UpdateModal from '../../common/modal/UpdateModal.tsx'; // UpdateModal import
-import DeleteModal from '../../common/modal/DeleteModal.tsx'; // DeleteModal import
-import { IProduct } from '../../types/product.ts'; // IProduct 타입 import
+import { getOne } from '../../api/productAPI';
+import UpdateModal from '../../common/modal/UpdateModal'; // UpdateModal import
+import DeleteModal from '../../common/modal/DeleteModal'; // DeleteModal import
+import { IProduct } from '../../types/product'; // IProduct 타입 import
 
 // 초기 상태 정의
 const initialState: IProduct = {
@@ -37,7 +37,7 @@ function ReadPage() {
       setProduct(productData);
       setLoading(false);
     } catch (err) {
-      console.log('Failed to fetch products:', err);
+      console.log('Failed to fetch product:', err);
       setLoading(false);
     }
   };
@@ -59,7 +59,7 @@ function ReadPage() {
 
   // Update 모달 닫기 함수
   const closeUpdateModal = () => {
-    setSelectedProduct(null);
+    setSelectedProduct(null); // 모달 닫을 때 상태 초기화
     setIsUpdateModalOpen(false);
     refreshProduct(); // 상태 새로고침
   };
@@ -84,9 +84,7 @@ function ReadPage() {
   };
 
   // 삭제 처리 함수
-  const handleDelete = (pno:number) => {
-    console.log(pno);
-    deleteProduct(pno);
+  const handleDelete = () => {
     setProduct({ ...initialState }); // 삭제 후 상태 초기화
     setIsDeleteModalOpen(false); // 삭제 모달 닫기
     moveToList(); // 리스트 페이지로 이동
@@ -102,10 +100,10 @@ function ReadPage() {
           </p>
           {product.uploadFileNames.length > 0 && (
             <div className="mb-4 flex space-x-4 overflow-x-auto">
-              {product.uploadFileNames.map((s_fileName, index) => (
+              {product.uploadFileNames.map((s_fileNames, index) => (
                 <img
                   key={index}
-                  src={`http://localhost:8089/api/products/view/${s_fileName}`}
+                  src={`http://localhost:8089/api/products/view/${s_fileNames}`} // 서버에서 파일을 제공하는 경로로 설정
                   alt={`${product.pname} image ${index + 1}`}
                   className="flex-shrink-0 w-60 h-60 rounded mb-2 object-cover"
                 />
@@ -135,7 +133,6 @@ function ReadPage() {
         </button>
       </div>
 
-
       {/* UpdateModal 컴포넌트 추가 및 모달 상태 전달 */}
       <UpdateModal
         isCorrectionModalOpen={isUpdateModalOpen}
@@ -150,10 +147,9 @@ function ReadPage() {
         isDeleteModalOpen={isDeleteModalOpen}
         closeDeleteModal={closeDeleteModal}
         selectedProduct={selectedProduct}
-        handleDelete={()=> handleDelete(Number(pno))} // 삭제 처리 함수 전달
+        handleDelete={handleDelete} // 삭제 처리 함수 전달
         navigateToList={moveToList} // 삭제 후 리스트 페이지로 이동
       />
-
     </div>
   );
 }
