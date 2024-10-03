@@ -17,11 +17,11 @@ const makeArr = (from: number, to: number): number[] => {
 
 function PageComponent({pageResponse}: Props): ReactElement {
 
-    const current: number = pageResponse.number + 1
+    const current: number = pageResponse.current + 1
     //  (1/10.0) => 0.1 => 1 * 10 => 20
     const tempLast: number = Math.ceil(current / 10.0) * 10
     const startPage: number = tempLast - 9
-    const endPage: number = pageResponse.totalPages < tempLast ? pageResponse.totalPages : tempLast;
+    const endPage: number = pageResponse.totalPage < tempLast ? pageResponse.totalPage : tempLast;
     const prev:boolean = startPage !== 1
     const next:boolean = true
 
