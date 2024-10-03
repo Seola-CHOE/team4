@@ -2,6 +2,7 @@ import { getProductList } from '../../api/productAPI.ts';
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IProduct } from '../../types/product.ts';
+import ProductSortComponent from "./ProductSortComponent.tsx";
 
 const initialState = {
   pno: 0,
@@ -11,6 +12,9 @@ const initialState = {
   uploadFileNames: [],
   del_flag: false
 }
+
+
+
 
 function ProductListComponent() {
 
@@ -47,16 +51,41 @@ function ProductListComponent() {
     fetchProductList();
   }, [page]);
 
+
+  const [sort, setSort] = useState<string>('ALL');
+
+  const changeSort = (choice:string):void => {
+    console.log('changeSort:', choice);
+    setSort(choice)
+  }
+
+  const filterKind = ():IProduct[] => {
+
+    if(sort === 'ALL'){
+      return productList
+    }
+    return productList.filter(p => {
+      if(p.pdesc === sort){
+        return p
+      }
+    })
+  }
+  console.log(filterKind())
+
   return (
     <div className="p-6 rounded-lg bg-white shadow-md">
       <div className="flex justify-between items-center gap-10">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Product List</h2>
+
         <button
           onClick={moveToAdd}
           className="bg-primary w-1/12 h-full p-4 text-white font-semibold rounded-lg">
           ADD
         </button>
+
+
       </div>
+      <ProductSortComponent  changeSort={changeSort} products={filterKind()}/>
       <table className="min-w-full table-auto">
         <thead>
         <tr className="bg-gray-100 text-left">
