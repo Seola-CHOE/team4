@@ -1,8 +1,9 @@
+import TodoAddComponent from '../../components/todos/TodoAddComponent.tsx';
 
 
 function TodoAddPage() {
   return (
-    <div></div>
+    <TodoAddComponent/>
   );
 }
 

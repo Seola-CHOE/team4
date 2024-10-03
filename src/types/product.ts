@@ -2,6 +2,7 @@
 export interface IProductImage{
   uploadFileNames: string;
   ord: number;
+  // pno: number;
 }
 
 export interface IProduct {
@@ -12,16 +13,6 @@ export interface IProduct {
   del_flag: boolean;
   uploadFileNames: IProductImage[];
 }
-
-// export interface IPageResponse {
-//   content: IProduct[],
-//   totalElements: number,
-//   number: number,
-//   first: boolean
-//   last: boolean
-//   size: number
-//   totalPages: number
-// }
 
 export interface IPageResponse {
   dtoList: IProduct[]; // 제품 리스트
