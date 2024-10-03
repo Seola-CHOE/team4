@@ -1,26 +1,32 @@
 import {ChangeEvent, useRef, useState} from "react";
 
 import {postAdd} from "../../api/productAPI.ts";
+import { useNavigate } from 'react-router-dom';
+import { IProduct } from '../../types/product.ts';
 
 const initialState = {
     pname: '',
     pdesc: '',
     price: '',
-}
-
-interface IProduct {
-    pname: string;
-    pdesc: string;
-    price: string;
+    uploadFileNames: [],
+    del_flag: false
 }
 
 function ProductAddComponent() {
 
-    const [product] = useState<IProduct>({...initialState})
+    const [product, setproduct] = useState<IProduct>({...initialState})
     const filesRef = useRef<HTMLInputElement>(null)
+    const navigate = useNavigate()
 
-    const handleChange = (e:ChangeEvent<HTMLInputElement>) => {
-        product[e.target.name] = e.target.value
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setproduct(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+        // @ts-ignore
+        // product[e.target.name] = e.target.value
     }
 
     const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,25 +36,29 @@ function ProductAddComponent() {
         const files = filesRef?.current?.files
         console.log(files)
 
-        const formData:FormData = new FormData()
+        const formData: FormData = new FormData()
 
-        if(files){
-            for(let i = 0; i < files.length; i++) {
+        if (files) {
+            for (let i = 0; i < files.length; i++) {
                 formData.append("files", files[i])
-
-                formData.append("pname", product.pname)
-                formData.append("pdesc", product.pdesc)
-                formData.append("price", product.price)
+            }
         }
+        formData.append("pname", product.pname)
+        formData.append("pdesc", product.pdesc)
+        formData.append("price", product.price)
 
-            // 파일입력 후 초기화
-            postAdd(formData).then(data => {
-                console.log(data)
-                if (filesRef.current) {
-                    filesRef.current.value = '';
-                }
-            })
-        }
+        // 파일입력 후 초기화
+        postAdd(formData).then(data => {
+            console.log(data)
+            if (filesRef.current) {
+                filesRef.current.value = '';
+            }
+            // 등록이 완료되면 상품 리스트 페이지로 이동
+            navigate('/product/list');
+        }).catch(error => {
+            console.error("Failed to add product:", error);
+            // 오류 처리 로직 추가 가능
+        })
     }
 
 
@@ -166,5 +176,6 @@ function ProductAddComponent() {
 
     );
 }
+
 
 export default ProductAddComponent;
