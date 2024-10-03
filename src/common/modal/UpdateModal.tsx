@@ -1,53 +1,71 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import { IProduct } from '../../types/product.ts'; // IProduct 타입 import
-import { updateProduct } from '../../api/productAPI'; // updateProduct API import
+import { IProduct } from '../../types/product.ts';
+import { updateProduct } from '../../api/productAPI';
 
-// UpdateModalProps 타입 정의
 interface UpdateModalProps {
   isCorrectionModalOpen: boolean;
   closeCorrectionModal: () => void;
   selectedProduct: IProduct | null;
   setSelectedProduct: React.Dispatch<React.SetStateAction<IProduct | null>>;
-  refreshProduct: () => void; // 상태 업데이트를 위한 함수
+  refreshProduct: () => void;
 }
 
-function UpdateModal({
-                       isCorrectionModalOpen,
-                       closeCorrectionModal,
-                       selectedProduct,
-                       setSelectedProduct,
-                       refreshProduct,
-                     }: UpdateModalProps) {
-  // 수정 로직
-  const handleModify = async () => {
+// react-modal 초기화 코드
+Modal.setAppElement('#root');
+
+const UpdateModal: React.FC<UpdateModalProps> = ({
+                                                   isCorrectionModalOpen,
+                                                   closeCorrectionModal,
+                                                   selectedProduct,
+                                                   setSelectedProduct,
+                                                   refreshProduct,
+                                                 }) => {
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // 파일 배열로 상태 관리
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]); // 미리보기 URL 배열
+
+  useEffect(() => {
     if (selectedProduct) {
-      try {
-        // undefined 확인 및 방어 코드 추가
-        const modifiedProduct = {
-          ...selectedProduct,
-          pname: selectedProduct.pname || '', // 기본값 설정
-          pdesc: selectedProduct.pdesc || '', // 기본값 설정
-          price: selectedProduct.price ? selectedProduct.price.toString() : '0', // 값이 없을 경우 '0'으로 설정
-        };
+      console.log('Selected product:', selectedProduct);
+    }
+  }, [selectedProduct]);
 
-        const formData = new FormData();
-        formData.append('pname', modifiedProduct.pname);
-        formData.append('pdesc', modifiedProduct.pdesc);
-        formData.append('price', modifiedProduct.price);
-        formData.append('del_flag', modifiedProduct.del_flag.toString());
+  // 파일 변경 핸들러
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const filesArray = Array.from(e.target.files); // 선택한 파일 배열로 변환
+      setSelectedFiles(filesArray);
 
-        // 서버에 수정된 제품 정보 전송
-        const response = await updateProduct(modifiedProduct.pno, formData);
+      // 파일 미리보기 URL 생성
+      const urls = filesArray.map((file) => URL.createObjectURL(file));
+      setPreviewUrls(urls);
+    }
+  };
 
-        console.log('Product successfully updated:', response);
+  // 수정 버튼 클릭 핸들러
+  const handleModify = async () => {
+    if (!selectedProduct) return;
 
-        // 상태 업데이트 및 모달 닫기
-        refreshProduct();
-        closeCorrectionModal();
-      } catch (error) {
-        console.error('Failed to update product:', error);
-      }
+    try {
+      const formData = new FormData();
+      formData.append('pname', selectedProduct.pname ?? '');
+      formData.append('pdesc', selectedProduct.pdesc ?? '');
+      formData.append('price', selectedProduct.price?.toString() ?? '0');
+      formData.append('pno', selectedProduct.pno.toString()); // pno 추가
+
+      // 선택된 파일이 있을 때만 파일 추가
+      selectedFiles.forEach((file) => {
+        formData.append('files', file); // 파일들을 formData에 추가
+      });
+
+      // 서버로 폼 데이터 전송하여 상품 업데이트
+      await updateProduct(selectedProduct.pno, formData);
+
+      // 상태 갱신 및 모달 창 닫기
+      refreshProduct();
+      closeCorrectionModal();
+    } catch (error) {
+      console.error('Failed to update product:', error);
     }
   };
 
@@ -55,119 +73,81 @@ function UpdateModal({
     <Modal
       isOpen={isCorrectionModalOpen}
       onRequestClose={closeCorrectionModal}
-      style={{
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          padding: '20px',
-          width: '500px',
-          borderRadius: '10px',
-        },
-        overlay: {
-          backgroundColor: 'rgba(0, 0, 0, 0.5)', // 배경색 설정
-        },
-      }}
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="bg-white rounded-lg shadow-lg w-full max-w-lg mx-auto p-6 relative"
       contentLabel="Update Product Modal"
     >
       <h2 className="text-2xl font-bold mb-4">Product Update</h2>
       {selectedProduct && (
         <div className="space-y-4">
-          {/* 제품 이름 수정 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Product Name:
-            </label>
-            <input
-              type="text"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              value={selectedProduct.pname}
-              onChange={(e) =>
-                setSelectedProduct({
-                  ...selectedProduct,
-                  pname: e.target.value,
-                })
-              }
-            />
-          </div>
+          {/* 제품명 입력 필드 */}
+          <input
+            type="text"
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={selectedProduct.pname ?? ''}
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, pname: e.target.value })}
+          />
 
-          {/* 제품 설명 수정 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Product Description:
-            </label>
-            <textarea
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              value={selectedProduct.pdesc}
-              onChange={(e) =>
-                setSelectedProduct({
-                  ...selectedProduct,
-                  pdesc: e.target.value,
-                })
-              }
-            />
-          </div>
+          {/* 제품 설명 입력 필드 */}
+          <textarea
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={selectedProduct.pdesc ?? ''}
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, pdesc: e.target.value })}
+          />
 
-          {/* 제품 가격 수정 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Product Price:
-            </label>
-            <input
-              type="number"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              value={selectedProduct.price}
-              onChange={(e) =>
-                setSelectedProduct({
-                  ...selectedProduct,
-                  price: parseFloat(e.target.value) || 0,
-                })
-              }
-            />
-          </div>
+          {/* 가격 입력 필드 */}
+          <input
+            type="number"
+            className="w-full p-2 border border-gray-300 rounded-md"
+            value={selectedProduct.price?.toString() ?? '0'}
+            onChange={(e) => setSelectedProduct({ ...selectedProduct, price: parseFloat(e.target.value) || 0 })}
+          />
 
-          {/* 삭제 플래그 수정 */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Delete Flag:
-            </label>
-            <select
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-              value={selectedProduct.del_flag ? 'true' : 'false'}
-              onChange={(e) =>
-                setSelectedProduct({
-                  ...selectedProduct,
-                  del_flag: e.target.value === 'true',
-                })
-              }
-            >
-              <option value="true">True</option>
-              <option value="false">False</option>
-            </select>
-          </div>
+          {/* 파일 선택 필드 - multiple 속성 추가 */}
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            className="w-full p-2 border border-gray-300 rounded-md"
+            onChange={handleFileChange}
+          />
 
-          {/* 모달 닫기 및 수정 버튼 */}
-          <div className="flex justify-end mt-4 space-x-4">
+          {/* 새로운 파일 미리보기 */}
+          {previewUrls.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold">New Image Previews</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {previewUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    alt={`Preview ${index + 1}`}
+                    className="w-24 h-24 object-cover border border-gray-300 rounded-md"
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 업데이트 및 취소 버튼 */}
+          <div className="flex justify-end space-x-4 mt-4">
             <button
-              className="bg-danger text-white font-bold py-2 px-4 rounded"
-              onClick={closeCorrectionModal}
+              onClick={handleModify}
+              className="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-              Cancel
+              Update
             </button>
             <button
-              className="bg-success text-white font-bold py-2 px-4 rounded"
-              onClick={handleModify} // 수정 로직 연결
+              onClick={closeCorrectionModal}
+              className="px-4 py-2 bg-success text-white rounded-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
             >
-              Modify
+              Cancel
             </button>
           </div>
         </div>
       )}
     </Modal>
   );
-}
+};
 
 export default UpdateModal;
