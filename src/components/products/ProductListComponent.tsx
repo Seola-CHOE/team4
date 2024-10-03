@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IProduct } from '../../types/product.ts';
 
-
-
 const initialState = {
   pno: 0,
   pname: '',
@@ -59,7 +57,7 @@ function ProductListComponent() {
         {productList.length > 0 ? (
           productList.map((product) => (
             <tr onClick={() => moveToRead(product.pno)} key={product.pno} className="border-b border-gray-200">
-              <td className="px-4 py-4 text-gray-700 font-medium">{product.pname}</td>
+              {/*<td className="px-4 py-4 text-gray-700 font-medium">{product.uploadFileNames(product.pno)}</td>*/}
               <td className="px-4 py-4 text-gray-700 font-medium">{product.pname}</td>
               <td className="px-4 py-4 text-gray-600">{product.pdesc}</td>
               <td className="px-4 py-4 text-gray-700">${product.price.toLocaleString()}</td>
