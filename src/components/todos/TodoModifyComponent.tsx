@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { ITodo } from '../../types/todo';
 
-interface ModifyComponent {
+interface ModifyComponentProps {
   todo: ITodo; // 수정할 todo
   onClose: () => void; // 모달 닫기 함수
   onModify: (modifiedTodo: ITodo) => void; // 수정된 todo 전달 함수
 }
 
-const ModifyComponent: React.FC<ModifyComponent> = ({ todo, onClose, onModify }) => {
+const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onClose, onModify }) => {
   const [modifiedTodo, setModifiedTodo] = useState<ITodo>({ ...todo }); // todo 상태 초기화
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +57,7 @@ const ModifyComponent: React.FC<ModifyComponent> = ({ todo, onClose, onModify })
               className="border rounded p-2 w-full"
             />
           </label>
-          <button onClick={handleSubmit} className="bg-blue-500 text-white p-2 rounded mr-2">수정 완료</button>
+          <button onClick={handleSubmit} className="bg-gray-300 p-2 rounded">수정 완료</button>
           <button onClick={onClose} className="bg-gray-300 p-2 rounded">취소</button>
         </div>
       </div>

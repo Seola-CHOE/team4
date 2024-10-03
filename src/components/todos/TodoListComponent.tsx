@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
 import useTodoList from '../../hooks/useTodoList';
 import { ITodo } from '../../types/todo';
-import ModifyModal from './TodoModifyComponent';
+import ModifyComponent from '../todos/TodoModifyComponent'; // 모달 컴포넌트 가져오기
 
-interface TodoListComponentProps {
-  handleModify: (todo: ITodo) => void; // handleModify를 props로 받기
-}
-
-function TodoListComponent({ handleModify }: TodoListComponentProps) {
+function TodoListComponent() {
   const { pageResponse, moveToRead } = useTodoList();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
+
+  // 수정된 todo를 처리하는 함수
+  const handleModify = (modifiedTodo: ITodo) => {
+    console.log('수정된 todo:', modifiedTodo);
+
+    // todo 목록 업데이트 로직
+    const updatedTodos = pageResponse.content.map(todo =>
+      todo.mno === modifiedTodo.mno ? modifiedTodo : todo
+    );
+
+    // 여기서 상태를 업데이트하는 방법에 따라 적절히 업데이트하세요
+    // 예: setTodos(updatedTodos); // useState로 관리하는 경우
+
+    setIsModalOpen(false); // 모달 닫기
+    setSelectedTodo(null); // 선택된 todo 초기화
+  };
 
   const openModifyModal = (todo: ITodo) => {
     setSelectedTodo(todo);
@@ -22,7 +34,7 @@ function TodoListComponent({ handleModify }: TodoListComponentProps) {
     setSelectedTodo(null);
   };
 
-  // Set을 사용하여 중복된 mno를 가진 항목을 제거
+  // 중복된 mno를 가진 항목을 제거
   const uniqueMnoSet = new Set<number>();
   const uniqueTodos = pageResponse.content.filter((todo: ITodo) => {
     if (!uniqueMnoSet.has(todo.mno)) {
@@ -60,7 +72,7 @@ function TodoListComponent({ handleModify }: TodoListComponentProps) {
                         className="text-blue-500 hover:text-blue-700"
                         onClick={(e) => {
                           e.stopPropagation(); // 부모 요소의 클릭 이벤트 전파 차단
-                          openModifyModal(todo); // Modify 버튼 클릭 시 모달 열기
+                          openModifyModal(todo); // 수정 모달 열기
                         }}
                       >
                         Modify
@@ -79,10 +91,10 @@ function TodoListComponent({ handleModify }: TodoListComponentProps) {
 
       {/* Modify Modal */}
       {isModalOpen && selectedTodo && (
-        <ModifyModal
+        <ModifyComponent
           todo={selectedTodo}
-          handleClose={closeModal}
-          handleModify={handleModify} // 수정 핸들러 전달
+          onClose={closeModal}
+          onModify={handleModify} // handleModify 전달
         />
       )}
     </div>
