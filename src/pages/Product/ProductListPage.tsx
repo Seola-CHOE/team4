@@ -5,6 +5,7 @@ function ProductListPage() {
   return (
     <div>
       <ProductListComponent></ProductListComponent>
+
     </div>
   );
 }
