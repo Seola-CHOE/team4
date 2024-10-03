@@ -1,5 +1,5 @@
 export interface ITodo {
-    mno?: number;
+    tno?: number;
     title: string;
     writer: string;
     dueDate: string;

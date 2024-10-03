@@ -6,21 +6,21 @@ function TodoListComponent() {
   const { pageResponse, moveToRead } = useTodoList();
 
   // pageResponse와 content가 정의되어 있는지 확인
-  if (!pageResponse || !Array.isArray(pageResponse.content)) {
+  if (!pageResponse || !Array.isArray(pageResponse.dtoList)) {
     return <div>Loading...</div>; // 로딩 중 메시지 또는 스피너 표시
   }
 
-  const listLI = pageResponse.content.map((todo: ITodo) => {
-    const { mno, title, writer, dueDate } = todo;
+  const listLI = pageResponse.dtoList.map((todo: ITodo) => {
+    const { tno, title, writer, dueDate } = todo;
 
     return (
       <tr
-        key={mno}
-        onClick={() => moveToRead(mno)}
+        key={tno}
+        onClick={() => moveToRead(tno)}
         className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
       >
         <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-          <h5 className="font-medium text-black dark:text-white">{mno}</h5>
+          <h5 className="font-medium text-black dark:text-white">{tno}</h5>
         </td>
         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
           <p className="text-black dark:text-white">{title}</p>
