@@ -1,12 +1,12 @@
 export interface ITodo {
-    mno?: number;
+    tno?: number;
     title: string;
     writer: string;
     dueDate: string;
 }
 
 export interface IPageResponse {
-  content: ITodo[],
+  dtoList: ITodo[],
   totalElements: number,
   number: number,
   first: boolean

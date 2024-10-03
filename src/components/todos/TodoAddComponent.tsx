@@ -47,7 +47,7 @@ function TodoAddComponent() {
   const closeCallback = () => {
     setResultData(0)
     setTodo({...initState})
-    navigate('/todo/list')
+
   }
 
 
