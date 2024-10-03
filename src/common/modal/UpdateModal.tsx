@@ -21,8 +21,8 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
                                                    setSelectedProduct,
                                                    refreshProduct,
                                                  }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]); // 파일 배열로 상태 관리
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]); // 미리보기 URL 배열
 
   useEffect(() => {
     if (selectedProduct) {
@@ -33,10 +33,12 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
   // 파일 변경 핸들러
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]; // 선택한 첫 번째 파일만 사용
-      setSelectedFile(file);
-      setPreviewUrl(URL.createObjectURL(file));
-      console.log('Selected file:', file);
+      const filesArray = Array.from(e.target.files); // 선택한 파일 배열로 변환
+      setSelectedFiles(filesArray);
+
+      // 파일 미리보기 URL 생성
+      const urls = filesArray.map((file) => URL.createObjectURL(file));
+      setPreviewUrls(urls);
     }
   };
 
@@ -51,11 +53,10 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
       formData.append('price', selectedProduct.price?.toString() ?? '0');
       formData.append('pno', selectedProduct.pno.toString()); // pno 추가
 
-      // 새로운 파일이 있을 때만 파일 추가
-      if (selectedFile) {
-        formData.append('files', selectedFile); // 파일을 files라는 키로 추가
-        console.log('Appending new file:', selectedFile);
-      }
+      // 선택된 파일이 있을 때만 파일 추가
+      selectedFiles.forEach((file) => {
+        formData.append('files', file); // 파일들을 formData에 추가
+      });
 
       // 서버로 폼 데이터 전송하여 상품 업데이트
       await updateProduct(selectedProduct.pno, formData);
@@ -102,23 +103,29 @@ const UpdateModal: React.FC<UpdateModalProps> = ({
             onChange={(e) => setSelectedProduct({ ...selectedProduct, price: parseFloat(e.target.value) || 0 })}
           />
 
-          {/* 파일 선택 필드 - 수정된 부분 */}
+          {/* 파일 선택 필드 - multiple 속성 추가 */}
           <input
-            type="file" // 'files' -> 'file'로 수정
+            type="file"
+            multiple
             accept="image/*"
             className="w-full p-2 border border-gray-300 rounded-md"
             onChange={handleFileChange}
           />
 
           {/* 새로운 파일 미리보기 */}
-          {previewUrl && (
-            <div>
-              <h3 className="text-lg font-bold">New Image Preview</h3>
-              <img
-                src={previewUrl}
-                alt="New Preview"
-                className="w-24 h-24 object-cover border border-gray-300 rounded-md"
-              />
+          {previewUrls.length > 0 && (
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold">New Image Previews</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {previewUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    alt={`Preview ${index + 1}`}
+                    className="w-24 h-24 object-cover border border-gray-300 rounded-md"
+                  />
+                ))}
+              </div>
             </div>
           )}
 
