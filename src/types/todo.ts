@@ -6,7 +6,7 @@ export interface ITodo {
 }
 
 export interface IPageResponse {
-  content: ITodo[],
+  dtoList: ITodo[],
   totalElements: number,
   number: number,
   first: boolean

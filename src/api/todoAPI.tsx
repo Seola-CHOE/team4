@@ -18,7 +18,7 @@ export const getTodoList = async (page?: number, size?: number): Promise<IPageRe
 
 export const postTodo = async (todo: ITodo): Promise<number> => {
 // 등록 경로 확인 및 수정
-  const res = await axios.post(`${host}/register`, todo); // 필요한 경우 /create, /add로 변경
+  const res = await axios.post(`${host}/`, todo); // 필요한 경우 /create, /add로 변경
   return res.data.mno;
 };
 
