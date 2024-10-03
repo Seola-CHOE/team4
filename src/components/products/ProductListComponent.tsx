@@ -89,7 +89,7 @@ function ProductListComponent() {
       <table className="min-w-full table-auto">
         <thead>
         <tr className="bg-gray-100 text-left">
-          {/*<th className="px-4 py-2 font-semibold text-gray-600">Product</th>*/}
+          <th className="px-4 py-2 font-semibold text-gray-600">Product</th>
           <th className="px-4 py-2 font-semibold text-gray-600">Product Name</th>
           <th className="px-4 py-2 font-semibold text-gray-600">Category</th>
           <th className="px-4 py-2 font-semibold text-gray-600">Price</th>
@@ -99,10 +99,10 @@ function ProductListComponent() {
         {productList.length > 0 ? (
           productList.map((product) => (
             <tr onClick={() => moveToRead(product.pno)} key={product.pno} className="border-b border-gray-200">
-              {/*<td className="px-4 py-4 text-gray-700 font-medium">{product.uploadFileNames(product.pno)}</td>*/}
-              <td className="px-4 py-4 text-gray-700 font-medium">{product.pname}</td>
-              <td className="px-4 py-4 text-gray-600">{product.pdesc}</td>
-              <td className="px-4 py-4 text-gray-700">${product.price.toLocaleString()}</td>
+              <td className="px-4 py-4 text-gray-700 font-medium w-1/12"><img src={`http://localhost:8089/api/products/view/s_${product.uploadFileNames[0]}`} alt="" /></td>
+              <td className="px-4 py-4 text-gray-700 font-medium w-1/6">{product.pname}</td>
+              <td className="px-4 py-4 text-gray-600 w-1/6">{product.pdesc}</td>
+              <td className="px-4 py-4 text-gray-700 w-1/6">${product.price.toLocaleString()}</td>
             </tr>
           ))
         ) : (
