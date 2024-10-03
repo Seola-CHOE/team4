@@ -13,8 +13,6 @@ function TodoListPage() {
       <div>
         <div>Todo List Page</div>
       </div>
-
-
       <TodoListComponent />
       <TodoModifyComponent />
     </>
