@@ -47,3 +47,14 @@ export const deleteProduct = async (pno: number) => {
         throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
     }
 };
+
+//상품 등록 API
+export const addProduct = async (formData: FormData) => {
+    try {
+        const response = await axios.post(`${host}/add`, formData, header);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to add product:', error);
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
+    }
+};
