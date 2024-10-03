@@ -1,14 +1,13 @@
-// src/api/productAPI.ts
 import axios from 'axios';
 import { IProduct } from '../types/product.ts';
 
-const host = 'http://localhost:8089/api/products'; // API 호스트 주소
+const host = 'http://localhost:8089/api/products';
 
 const header = {
     headers: {
-        'Content-Type': 'multipart/form-data', // 파일 전송 형식 지정
-    },
-};
+        'Content-Type': 'multipart/form-data',  // 파일 전송 형식 지정
+    }
+}
 
 // 상품 추가 API
 export const postAdd = async (formData: FormData): Promise<number> => {

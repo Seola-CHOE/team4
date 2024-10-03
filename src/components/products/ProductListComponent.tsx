@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { IProduct } from '../../types/product.ts';
 
-
-
 const initialState = {
   pno: 0,
   pname: '',
@@ -33,6 +31,12 @@ function ProductListComponent() {
     })
   }
 
+  const moveToAdd = () => {
+    navigate({
+      pathname: `/product/add`
+    })
+  }
+
   useEffect(() => {
     const fetchProductList = async () => {
       const response = await getProductList(page);
@@ -45,10 +49,18 @@ function ProductListComponent() {
 
   return (
     <div className="p-6 rounded-lg bg-white shadow-md">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-6">Product List</h2>
+      <div className="flex justify-between items-center gap-10">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Product List</h2>
+        <button
+          onClick={moveToAdd}
+          className="bg-primary w-1/12 h-full p-4 text-white font-semibold rounded-lg">
+          ADD
+        </button>
+      </div>
       <table className="min-w-full table-auto">
         <thead>
         <tr className="bg-gray-100 text-left">
+          {/*<th className="px-4 py-2 font-semibold text-gray-600">Product</th>*/}
           <th className="px-4 py-2 font-semibold text-gray-600">Product Name</th>
           <th className="px-4 py-2 font-semibold text-gray-600">Category</th>
           <th className="px-4 py-2 font-semibold text-gray-600">Price</th>
@@ -58,6 +70,7 @@ function ProductListComponent() {
         {productList.length > 0 ? (
           productList.map((product) => (
             <tr onClick={() => moveToRead(product.pno)} key={product.pno} className="border-b border-gray-200">
+              {/*<td className="px-4 py-4 text-gray-700 font-medium">{product.uploadFileNames(product.pno)}</td>*/}
               <td className="px-4 py-4 text-gray-700 font-medium">{product.pname}</td>
               <td className="px-4 py-4 text-gray-600">{product.pdesc}</td>
               <td className="px-4 py-4 text-gray-700">${product.price.toLocaleString()}</td>
