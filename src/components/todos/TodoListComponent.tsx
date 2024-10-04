@@ -2,16 +2,41 @@ import useTodoList from "../../hooks/useTodoList.tsx";
 import { ITodo } from "../../types/todo.ts";
 import PageComponent from '../../common/PageComponent.tsx';
 import { useEffect, useState } from "react";
+import ModifyComponent from '../todos/TodoModifyComponent.tsx'; // ModifyComponent 임포트
 
 function TodoListComponent() {
   const { pageResponse, moveToRead } = useTodoList();
   const [todos, setTodos] = useState<ITodo[]>(pageResponse.dtoList || []);
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
 
   useEffect(() => {
     if (pageResponse && Array.isArray(pageResponse.dtoList)) {
       setTodos(pageResponse.dtoList);
     }
   }, [pageResponse]);
+
+  const openModal = (todo: ITodo) => {
+    setSelectedTodo(todo);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedTodo(null);
+  };
+
+  const handleUpdateTodo = (updatedTodo: ITodo) => {
+    setTodos(prevTodos =>
+      prevTodos.map(todo => (todo.tno === updatedTodo.tno ? updatedTodo : todo))
+    );
+    closeModal();
+  };
+
+  const handleDeleteTodo = (tno: number) => {
+    setTodos(prevTodos => prevTodos.filter(todo => todo.tno !== tno));
+    closeModal();
+  };
 
   const listLI = todos.map((todo: ITodo) => {
     const { tno, title, writer, dueDate } = todo;
@@ -35,7 +60,7 @@ function TodoListComponent() {
           <p className="text-black">{new Date(dueDate).toLocaleDateString()}</p>
         </td>
         <td className="border-b border-[#eee] py-5 px-4">
-          <button className="text-blue-500 hover:text-blue-700">Edit/Delete</button>
+          <button onClick={(e) => { e.stopPropagation(); openModal(todo); }} className="text-blue-500 hover:text-blue-700">Edit/Delete</button>
         </td>
       </tr>
     );
@@ -60,6 +85,15 @@ function TodoListComponent() {
         </div>
         <PageComponent pageResponse={pageResponse} />
       </div>
+
+      {isModalOpen && selectedTodo && (
+        <ModifyComponent
+          todo={selectedTodo}
+          onUpdate={handleUpdateTodo}
+          onDelete={handleDeleteTodo}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 }
