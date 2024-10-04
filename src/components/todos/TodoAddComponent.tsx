@@ -1,77 +1,81 @@
-import useTodoList from "../../hooks/useTodoList.ts";
 import { ITodo } from "../../types/todo.ts";
-import PageComponent from '../../common/PageComponent.tsx';
-import { useEffect, useState } from "react";
-import TodoAddComponent from './TodoAddComponent'; // TodoAddComponent import 추가
+import { ChangeEvent, useCallback, useState } from "react";
+import { postTodo } from "../../api/todoAPI.tsx";
+import { useNavigate } from "react-router-dom";
 
-function TodoListComponent() {
-  const { pageResponse, moveToRead } = useTodoList();
-  const [todos, setTodos] = useState<ITodo[]>(pageResponse.dtoList || []);
+const initState: ITodo = {
+  tno: undefined,
+  title: '',
+  writer: '',
+  dueDate: '',
+};
 
-  useEffect(() => {
-    if (pageResponse && Array.isArray(pageResponse.dtoList)) {
-      setTodos(pageResponse.dtoList);
-    }
-  }, [pageResponse]);
+function TodoAddComponent() {
+  const [todo, setTodo] = useState<ITodo>({ ...initState });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleTodoAdded = (newTodo: ITodo) => {
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setTodo((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  }, []);
+
+  const handleClick = () => {
+    setLoading(true);
+    postTodo(todo)
+      .then((newTodo: ITodo) => {
+        console.log(newTodo); // 새로 추가된 todo를 콘솔에 로그
+        setTodo({ ...initState }); // 입력 필드 초기화
+        navigate('/todo/list'); // 리스트 페이지로 이동
+      })
+      .catch((error) => {
+        console.error("Failed to add todo:", error);
+      })
+      .finally(() => {
+        setLoading(false); // 로딩 상태 해제
+      });
   };
 
-  if (!Array.isArray(todos)) {
-    return <div>Loading...</div>;
-  }
-
-  const listLI = todos.map((todo: ITodo) => {
-    const { tno, title, writer, dueDate } = todo;
-
-    return (
-      <tr
-        key={tno}
-        onClick={() => moveToRead(tno)}
-        className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
-      >
-        <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-          <h5 className="font-medium text-black dark:text-white">{tno}</h5>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <p className="text-black dark:text-white">{title}</p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <p className="text-black dark:text-white">{writer}</p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <p className="text-black dark:text-white">{new Date(dueDate).toLocaleDateString()}</p>
-        </td>
-        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <button className="text-blue-500 hover:text-blue-700">Edit/Delete</button>
-        </td>
-      </tr>
-    );
-  });
-
   return (
-    <div>
-      <TodoAddComponent onTodoAdded={handleTodoAdded} /> {/* 콜백 전달 */}
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <div className="max-w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-            <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] py-4 px-4 justify-center text-black dark:text-white xl:pl-11">No.</th>
-              <th className="min-w-[220px] py-4 px-4 justify-center text-black dark:text-white xl:pl-11">Title</th>
-              <th className="min-w-[150px] py-4 px-4 justify-center text-black dark:text-white">Writer</th>
-              <th className="py-4 px-4 justify-center text-black dark:text-white">Due Date</th>
-              <th className="py-4 px-4 justify-center text-black dark:text-white">Modi/Del</th>
-            </tr>
-            </thead>
-            <tbody>{listLI}</tbody>
-          </table>
-        </div>
-        <PageComponent pageResponse={pageResponse} />
-      </div>
+    <div className='flex flex-col space-y-4 w-96 mx-auto'>
+      <label className="text-sm font-semibold text-gray-700">Title</label>
+      <input
+        type="text"
+        name="title"
+        className="border border-gray-300 rounded-lg p-3"
+        placeholder="Enter Title"
+        value={todo.title}
+        onChange={handleChange}
+      />
+      <label className="text-sm font-semibold text-gray-700">Writer</label>
+      <input
+        type="text"
+        name="writer"
+        className="border border-gray-300 rounded-lg p-3"
+        placeholder="Enter Writer"
+        value={todo.writer}
+        onChange={handleChange}
+      />
+      <label className="text-sm font-semibold text-gray-700">Due Date</label>
+      <input
+        type="date"
+        name="dueDate"
+        className="border border-gray-300 rounded-lg p-3"
+        value={todo.dueDate}
+        onChange={handleChange}
+      />
+      <button
+        type="button"
+        className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg"
+        onClick={handleClick}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Submit'}
+      </button>
     </div>
   );
 }
 
-export default TodoListComponent;
+export default TodoAddComponent;
