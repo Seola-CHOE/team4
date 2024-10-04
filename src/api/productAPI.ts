@@ -27,6 +27,7 @@ export const getOne = async (pno: number): Promise<IProduct> => {
     return res.data;
 };
 
+// 상품 업데이트 조회 API
 export const updateProduct = async (pno: number, formData: FormData) => {
     try {
         const response = await axios.put(`${host}/${pno}`, formData, header);

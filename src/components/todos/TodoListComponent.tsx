@@ -1,26 +1,48 @@
-import useTodoList from "../../hooks/useTodoList.ts";
-import { ITodo } from "../../types/todo.ts";
+// TodoListComponent.tsx
+
+import useTodoList from "../../hooks/useTodoList.tsx";
 import PageComponent from '../../common/PageComponent.tsx';
 
 function TodoListComponent() {
-  const { pageResponse, moveToRead } = useTodoList();
+  const { pageResponse, moveToRead, loading, page, setPage } = useTodoList();
 
-  // pageResponse와 content가 정의되어 있는지 확인
-  if (!pageResponse || !Array.isArray(pageResponse.dtoList)) {
-    return <div>Loading...</div>; // 로딩 중 메시지 또는 스피너 표시
+  // 데이터 로딩 중일 때 표시할 내용
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
-  const listLI = pageResponse.dtoList.map((todo: ITodo) => {
+  // pageResponse와 dtoList가 정의되어 있는지 확인
+  if (!pageResponse || !Array.isArray(pageResponse.dtoList)) {
+    return <div>No data available</div>;
+  }
+
+  // 데이터가 없을 때 "No data available" 메시지 표시
+  if (pageResponse.dtoList.length === 0) {
+    return <div>No data available</div>;
+  }
+
+  // 데이터 확인을 위한 console.log 출력
+  console.log("Page Response:", pageResponse);
+  console.log("DTO List:", pageResponse?.dtoList);
+
+  // Todo 리스트를 렌더링
+  const listItems = pageResponse.dtoList.map((todo, idx) => {
     const { tno, title, writer, dueDate } = todo;
+
+    // key 값으로 tno가 유효한지 확인하고, 유효하지 않으면 idx를 사용하여 고유한 값 설정
+    const key = tno !== undefined && !isNaN(tno) ? `todo-${tno}` : `todo-${idx}`;
 
     return (
       <tr
-        key={tno}
-        onClick={() => moveToRead(tno)}
+        key={key} // 고유한 key 값 설정
+        onClick={() => {
+          // tno가 유효할 때만 함수 호출
+          if (tno !== undefined) moveToRead(tno);
+        }}
         className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
       >
         <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
-          <h5 className="font-medium text-black dark:text-white">{tno}</h5>
+          <h5 className="font-medium text-black dark:text-white">{tno !== undefined ? tno : 'N/A'}</h5>
         </td>
         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
           <p className="text-black dark:text-white">{title}</p>
@@ -30,7 +52,7 @@ function TodoListComponent() {
         </td>
         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
           <p className="text-black dark:text-white">
-            {new Date(dueDate).toLocaleDateString()}
+            {dueDate ? new Date(dueDate).toLocaleDateString() : 'No due date'}
           </p>
         </td>
         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
@@ -63,10 +85,11 @@ function TodoListComponent() {
             </th>
           </tr>
           </thead>
-          <tbody>{listLI}</tbody>
+          <tbody>{listItems}</tbody>
         </table>
       </div>
-      <PageComponent pageResponse={pageResponse} />
+      {/* PageComponent에 필요한 prop 전달 */}
+      <PageComponent pageResponse={pageResponse} changePage={setPage} currentPage={page} />
     </div>
   );
 }
