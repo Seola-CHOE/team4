@@ -1,98 +1,77 @@
-import {ITodo} from "../../types/todo.ts";
-import {ChangeEvent, useCallback, useState} from "react";
-import {postTodo} from "../../api/todoAPI.tsx";
-import {useNavigate} from "react-router-dom";
+import useTodoList from "../../hooks/useTodoList.ts";
+import { ITodo } from "../../types/todo.ts";
+import PageComponent from '../../common/PageComponent.tsx';
+import { useEffect, useState } from "react";
+import TodoAddComponent from './TodoAddComponent'; // TodoAddComponent import 추가
 
+function TodoListComponent() {
+  const { pageResponse, moveToRead } = useTodoList();
+  const [todos, setTodos] = useState<ITodo[]>(pageResponse.dtoList || []);
 
+  useEffect(() => {
+    if (pageResponse && Array.isArray(pageResponse.dtoList)) {
+      setTodos(pageResponse.dtoList);
+    }
+  }, [pageResponse]);
 
-const initState:ITodo ={
-  title:'',
-  writer:'',
-  dueDate:'',
-}
+  const handleTodoAdded = (newTodo: ITodo) => {
+    setTodos((prevTodos) => [...prevTodos, newTodo]);
+  };
 
-function TodoAddComponent() {
-
-  const [todo, setTodo] = useState<ITodo>({...initState})
-
-  const [loading, setLoading] = useState(false)
-
-  const navigate = useNavigate()
-
-  const [resultData, setResultData] = useState<number>(0)
-
-  const handleChange = useCallback((e:ChangeEvent<HTMLInputElement>) => {
-// @ts-ignore
-    todo[e.target.name] = e.target.value
-
-    setTodo({...todo})
-  },[])
-
-  const handleClick = () => {
-
-    setLoading(true)
-    postTodo(todo).then( (mno:number) => {
-
-      console.log(mno)
-      setResultData(mno)
-
-      setTimeout(() => {
-        setLoading(false)
-      }, 600)
-
-      navigate('/todo/list')
-    })
+  if (!Array.isArray(todos)) {
+    return <div>Loading...</div>;
   }
 
-  const closeCallback = () => {
-    setResultData(0)
-    setTodo({...initState})
+  const listLI = todos.map((todo: ITodo) => {
+    const { tno, title, writer, dueDate } = todo;
 
-  }
-
-
+    return (
+      <tr
+        key={tno}
+        onClick={() => moveToRead(tno)}
+        className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
+          <h5 className="font-medium text-black dark:text-white">{tno}</h5>
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <p className="text-black dark:text-white">{title}</p>
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <p className="text-black dark:text-white">{writer}</p>
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <p className="text-black dark:text-white">{new Date(dueDate).toLocaleDateString()}</p>
+        </td>
+        <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
+          <button className="text-blue-500 hover:text-blue-700">Edit/Delete</button>
+        </td>
+      </tr>
+    );
+  });
 
   return (
-    <div className='flex flex-col space-y-4 w-96 mx-auto'>
-
-
-      <label className="text-sm font-semibold text-gray-700">Title</label>
-      <input
-        type="text"
-        name="title"
-        className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
-        placeholder="Enter Title"
-        value={todo.title}
-        onChange={e => handleChange(e)}
-      />
-      <label className="text-sm font-semibold text-gray-700">Writer</label>
-      <input
-        type="text"
-        name="writer"
-        className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
-        placeholder="Enter Writer"
-        value={todo.writer}
-        onChange={e => handleChange(e)}
-      />
-      <label className="text-sm font-semibold text-gray-700">DueDate</label>
-      <input
-        type="date"
-        name="dueDate"
-        className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-300"
-        placeholder="Enter Date"
-        value={todo.dueDate}
-        onChange={e => handleChange(e)}
-      />
-
-      <button
-        type="submit"
-        className="bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300"
-        onClick={handleClick}
-      >
-        Submit
-      </button>
+    <div>
+      <TodoAddComponent onTodoAdded={handleTodoAdded} /> {/* 콜백 전달 */}
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+            <tr className="bg-gray-2 text-left dark:bg-meta-4">
+              <th className="min-w-[220px] py-4 px-4 justify-center text-black dark:text-white xl:pl-11">No.</th>
+              <th className="min-w-[220px] py-4 px-4 justify-center text-black dark:text-white xl:pl-11">Title</th>
+              <th className="min-w-[150px] py-4 px-4 justify-center text-black dark:text-white">Writer</th>
+              <th className="py-4 px-4 justify-center text-black dark:text-white">Due Date</th>
+              <th className="py-4 px-4 justify-center text-black dark:text-white">Modi/Del</th>
+            </tr>
+            </thead>
+            <tbody>{listLI}</tbody>
+          </table>
+        </div>
+        <PageComponent pageResponse={pageResponse} />
+      </div>
     </div>
   );
 }
 
-export default TodoAddComponent;
+export default TodoListComponent;

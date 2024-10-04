@@ -34,7 +34,7 @@ function TodoListComponent() {
           </p>
         </td>
         <td className="border-b border-[#eee] py-5 px-4 dark:border-strokedark">
-          <button className="text-blue-500 hover:text-blue-700">Edit/Delete</button>
+          <button className="text-blue-500 hover:text-blue-700">Modi/Del</button>
         </td>
       </tr>
     );
