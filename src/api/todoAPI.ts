@@ -22,8 +22,21 @@ export const postTodo = async (todo: ITodo): Promise<number> => {
   return res.data.tno; // API 응답 속성명이 tno로 가정
 };
 
+
+// Todo 상세보기 API
 export const getOne = async (tno: number): Promise<ITodo> => {
-  // 상세 조회 경로 확인 및 수정
-  const res = await axios.get(`${host}/view/${tno}`); // 필요한 경우 경로 변경
+  const res = await axios.get<ITodo>(`${host}/${tno}`);
   return res.data;
+};
+
+// Todo 업데이트 API
+export const updateTodo = async (tno: number, todo: ITodo): Promise<ITodo> => {
+  const res = await axios.put<ITodo>(`${host}/${tno}`, todo);
+  return res.data;
+};
+
+// Todo 삭제 API
+export const deleteTodo = async (tno: number): Promise<boolean> => {
+  const res = await axios.delete<{ success: boolean }>(`${host}/${tno}`);
+  return res.data.success;
 };

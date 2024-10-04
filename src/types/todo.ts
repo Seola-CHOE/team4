@@ -3,6 +3,7 @@ export interface ITodo {
     title: string,
     writer: string,
     dueDate: string
+  complete: boolean
 }
 
 export interface IPageRequestDTO {
