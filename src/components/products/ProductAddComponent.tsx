@@ -18,6 +18,7 @@ const initialState = {
 function ProductAddComponent() {
 
     const [product, setProduct] = useState<IProduct>({...initialState})
+    const [isRegistered, setIsRegistered] = useState(false); // 상품 등록 완료 여부 상태 추가
     const [isAddModalOpen, setIsAddModalOpen] = useState(false); // 모달 열기/닫기 상태
     const filesRef = useRef<HTMLInputElement>(null)
 
@@ -59,7 +60,7 @@ function ProductAddComponent() {
         // 파일입력 후 초기화
         postAdd(formData).then(data => {
             console.log(data)
-
+            setIsRegistered(true);
             if (filesRef.current) {
                 filesRef.current.value = '';
             }
@@ -132,9 +133,12 @@ function ProductAddComponent() {
                             </label>
                             <div className="relative z-20 bg-transparent dark:bg-form-input">
                                 <select
-                                    className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                                    className={`relative z-20 w-full appearance-none rounded border ${
+                                        isRegistered ? 'border-gray-400' : 'border-stroke'
+                                    } bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary`}
                                     name='pdesc'
                                     onChange={(e) => handleChange(e)}
+                                    disabled={isRegistered} // 상품 등록 후 비활성화
                                 >
                                     <option value="">Select category</option>
                                     <option value="Daily goods">Daily goods</option>

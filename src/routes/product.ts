@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 import ProductReadPage from '../pages/Product/ProductReadPage.tsx';
 
-const ProductIndex  = lazy(() => import('../pages/Product/IndexPage'));
+const ProductIndex  = lazy(() => import('../pages/Product/ProductIndexPage.tsx'));
 const ProductList = lazy(() => import('../pages/Product/ProductListPage'));
 const ProductAdd = lazy(() => import('../pages/Product/ProductAddPage.tsx'));
 

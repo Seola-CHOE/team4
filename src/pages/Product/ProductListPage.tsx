@@ -1,10 +1,12 @@
-import ProductListComponent from '../../components/products/ProductListComponent';
+import ProductListComponent from '../../components/products/ProductListComponent.tsx';
 
 function ProductListPage() {
 
   return (
     <div>
+      <div>Product List Page</div>
       <ProductListComponent></ProductListComponent>
+
     </div>
   );
 }
