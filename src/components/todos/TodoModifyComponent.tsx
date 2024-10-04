@@ -16,12 +16,12 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onDel
   const handleUpdate = (e: React.MouseEvent) => {
     e.stopPropagation();
     const updatedTodo = { ...todo, title, writer, dueDate };
-    onUpdate(updatedTodo);
+    onUpdate(updatedTodo); // 부모 컴포넌트에 수정된 todo 전달
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onDelete(todo.tno);
+    onDelete(todo.tno); // 부모 컴포넌트에 삭제 요청
   };
 
   return (

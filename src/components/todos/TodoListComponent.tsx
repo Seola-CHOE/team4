@@ -2,19 +2,30 @@ import useTodoList from "../../hooks/useTodoList.tsx";
 import { ITodo } from "../../types/todo.ts";
 import PageComponent from '../../common/PageComponent.tsx';
 import { useEffect, useState } from "react";
-import ModifyComponent from '../todos/TodoModifyComponent.tsx'; // ModifyComponent 임포트
+import ModifyComponent from '../todos/TodoModifyComponent';
 
 function TodoListComponent() {
   const { pageResponse, moveToRead } = useTodoList();
-  const [todos, setTodos] = useState<ITodo[]>(pageResponse.dtoList || []);
+  const [todos, setTodos] = useState<ITodo[]>(() => {
+    const savedTodos = localStorage.getItem('todos');
+    return savedTodos ? JSON.parse(savedTodos) : [];
+  });
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
 
   useEffect(() => {
     if (pageResponse && Array.isArray(pageResponse.dtoList)) {
-      setTodos(pageResponse.dtoList);
+      // 로컬 스토리지에 저장된 데이터가 없을 때만 pageResponse의 데이터를 사용
+      if (!localStorage.getItem('todos')) {
+        setTodos(pageResponse.dtoList);
+      }
     }
   }, [pageResponse]);
+
+  // todos가 변경될 때마다 로컬 스토리지 업데이트
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const openModal = (todo: ITodo) => {
     setSelectedTodo(todo);
@@ -27,14 +38,20 @@ function TodoListComponent() {
   };
 
   const handleUpdateTodo = (updatedTodo: ITodo) => {
-    setTodos(prevTodos =>
-      prevTodos.map(todo => (todo.tno === updatedTodo.tno ? updatedTodo : todo))
-    );
+    setTodos(prevTodos => {
+      const newTodos = prevTodos.map(todo =>
+        todo.tno === updatedTodo.tno ? updatedTodo : todo
+      );
+      return newTodos; // 로컬 스토리지는 useEffect에서 업데이트 됨
+    });
     closeModal();
   };
 
   const handleDeleteTodo = (tno: number) => {
-    setTodos(prevTodos => prevTodos.filter(todo => todo.tno !== tno));
+    setTodos(prevTodos => {
+      const newTodos = prevTodos.filter(todo => todo.tno !== tno);
+      return newTodos; // 로컬 스토리지는 useEffect에서 업데이트 됨
+    });
     closeModal();
   };
 
