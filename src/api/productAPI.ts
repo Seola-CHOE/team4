@@ -27,6 +27,7 @@ export const getOne = async (pno: number): Promise<IProduct> => {
     return res.data;
 };
 
+// 상품 업데이트 조회 API
 export const updateProduct = async (pno: number, formData: FormData) => {
     try {
         const response = await axios.put(`${host}/${pno}`, formData, header);
@@ -44,6 +45,17 @@ export const deleteProduct = async (pno: number) => {
         return response.data;
     } catch (error) {
         console.error('Failed to delete product:', error);
+        throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
+    }
+};
+
+//상품 등록 API
+export const addProduct = async (formData: FormData) => {
+    try {
+        const response = await axios.post(`${host}/add`, formData, header);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to add product:', error);
         throw error; // 에러 발생 시 호출한 쪽에서 처리하도록 예외 던짐
     }
 };

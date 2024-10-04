@@ -18,7 +18,7 @@ const todoRouter = [
     component: TodoIndex
   },
   {
-    path: '/todo/read',
+    path: '/todo/read/:tno',
     title: 'TodoRead',
     component: TodoRead
   },
