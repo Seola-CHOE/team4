@@ -3,12 +3,13 @@ import useTodoList from '../../hooks/useTodoList';
 import { ITodo } from '../../types/todo';
 import PageComponent from '../../common/PageComponent';
 import ModifyComponent from '../todos/TodoModifyComponent';
-import { updateTodo } from '../../api/todoAPI';
+import { updateTodo, deleteTodo } from '../../api/todoAPI';
 
 function TodoListComponent() {
-  const { pageResponse, moveToRead, loading, refreshTodoList } = useTodoList();
+  const { pageResponse, moveToRead, loading } = useTodoList();
   const [todos, setTodos] = useState<ITodo[]>([]);
-  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [isModifyModalOpen, setModifyModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
 
   useEffect(() => {
@@ -17,32 +18,52 @@ function TodoListComponent() {
     }
   }, [pageResponse]);
 
-  const openModal = (todo: ITodo) => {
+  const openModifyModal = (todo: ITodo) => {
     setSelectedTodo(todo);
-    setModalOpen(true);
+    setModifyModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  const closeModifyModal = () => {
+    setModifyModalOpen(false);
+    setSelectedTodo(null);
+  };
+
+  const openDeleteModal = (todo: ITodo) => {
+    setSelectedTodo(todo);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModalOpen(false);
     setSelectedTodo(null);
   };
 
   // 할 일 업데이트 핸들러
   const handleUpdateTodo = async (updatedTodo: ITodo) => {
     try {
-      console.log('Before Update:', updatedTodo);
-      await updateTodo(updatedTodo.tno as number, updatedTodo); // 서버에 업데이트 요청
+      await updateTodo(updatedTodo.tno as number, updatedTodo);
 
-      // todos 상태를 업데이트하여 수정된 writer를 반영
       setTodos((prevTodos) => {
         return prevTodos.map((todo) =>
           todo.tno === updatedTodo.tno ? { ...todo, writer: updatedTodo.writer, title: updatedTodo.title } : todo
         );
       });
 
-      closeModal(); // 수정 후 모달 닫기
+      closeModifyModal();
     } catch (error) {
-      console.error('Failed to update todo:', error);
+      console.error('할 일 업데이트 실패:', error);
+    }
+  };
+
+  // 할 일 삭제 핸들러
+  const handleDeleteTodo = async () => {
+    if (!selectedTodo) return;
+    try {
+      await deleteTodo(selectedTodo.tno as number);
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.tno !== selectedTodo.tno));
+      closeDeleteModal();
+    } catch (error) {
+      console.error('할 일 삭제 실패:', error);
     }
   };
 
@@ -66,12 +87,21 @@ function TodoListComponent() {
         <td className="border-b border-[#eee] py-5 px-4">
           <button
             onClick={(e) => {
-              e.stopPropagation(); // 이벤트 버블링 방지
-              openModal(todo); // 모달 열기
+              e.stopPropagation();
+              openModifyModal(todo);
             }}
-            className="text-blue-500 hover:text-blue-700"
+            className="text-blue-500 hover:text-blue-700 mr-3"
           >
-            Edit
+            수정
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              openDeleteModal(todo);
+            }}
+            className="text-red-500 hover:text-red-700"
+          >
+            삭제
           </button>
         </td>
       </tr>
@@ -86,21 +116,44 @@ function TodoListComponent() {
             <thead>
             <tr className="bg-gray-2 text-left">
               <th className="min-w-[220px] py-4 px-4">No.</th>
-              <th className="min-w-[220px] py-4 px-4">Title</th>
-              <th className="min-w-[150px] py-4 px-4">Writer</th>
-              <th className="py-4 px-4">Due Date</th>
-              <th className="py-4 px-4">Modi/Del</th>
+              <th className="min-w-[220px] py-4 px-4">제목</th>
+              <th className="min-w-[150px] py-4 px-4">작성자</th>
+              <th className="py-4 px-4">기한</th>
+              <th className="py-4 px-4">수정/삭제</th>
             </tr>
             </thead>
             <tbody>{listLI}</tbody>
           </table>
         </div>
-        {!loading && <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('Page changed to:', page)} />}
+        {!loading && <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('페이지 변경:', page)} />}
       </div>
 
       {/* 수정 모달 컴포넌트 */}
-      {isModalOpen && selectedTodo && (
-        <ModifyComponent todo={selectedTodo} onUpdate={handleUpdateTodo} onClose={closeModal} />
+      {isModifyModalOpen && selectedTodo && (
+        <ModifyComponent todo={selectedTodo} onUpdate={handleUpdateTodo} onClose={closeModifyModal} />
+      )}
+
+      {/* 삭제 확인 모달 컴포넌트 */}
+      {isDeleteModalOpen && selectedTodo && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-md">
+            <h2 className="text-lg font-semibold mb-4">정말로 삭제하시겠습니까?</h2>
+            <div className="flex justify-end">
+              <button
+                onClick={closeDeleteModal}
+                className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded"
+              >
+                삭제
+              </button>
+              <button
+                onClick={handleDeleteTodo}
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-black rounded"
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
