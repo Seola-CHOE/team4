@@ -1,62 +1,56 @@
-import React, { useEffect, useState } from "react";
-import useTodoList from "../../hooks/useTodoList";
-import { ITodo } from "../../types/todo";
-import PageComponent from "../../common/PageComponent";
-import ModifyComponent from "../todos/TodoModifyComponent";
-import { updateTodo } from "../../api/todoAPI"; // 서버와 통신하는 업데이트 함수 가져오기
+import React, { useEffect, useState } from 'react';
+import useTodoList from '../../hooks/useTodoList';
+import { ITodo } from '../../types/todo';
+import PageComponent from '../../common/PageComponent';
+import ModifyComponent from '../todos/TodoModifyComponent';
+import { updateTodo } from '../../api/todoAPI';
 
 function TodoListComponent() {
-  const { pageResponse, moveToRead, loading, refreshTodoList } = useTodoList(); // useTodoList 훅 사용
-  const [todos, setTodos] = useState<ITodo[]>([]); // 할 일 목록 상태
-  const [isModalOpen, setModalOpen] = useState<boolean>(false); // 모달 열기 상태
-  const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null); // 선택된 할 일
+  const { pageResponse, moveToRead, loading, refreshTodoList } = useTodoList();
+  const [todos, setTodos] = useState<ITodo[]>([]);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
 
-  // pageResponse가 변경될 때마다 todos 상태를 업데이트
   useEffect(() => {
     if (pageResponse && Array.isArray(pageResponse.dtoList)) {
-      setTodos(pageResponse.dtoList); // pageResponse의 dtoList를 todos 상태로 설정
+      setTodos(pageResponse.dtoList);
     }
   }, [pageResponse]);
 
-  // 모달을 열기 위한 함수
   const openModal = (todo: ITodo) => {
     setSelectedTodo(todo);
     setModalOpen(true);
   };
 
-  // 모달을 닫기 위한 함수
   const closeModal = () => {
     setModalOpen(false);
     setSelectedTodo(null);
   };
 
-  // 할 일 업데이트 핸들러 (서버에 업데이트 요청)
+  // 할 일 업데이트 핸들러
   const handleUpdateTodo = async (updatedTodo: ITodo) => {
     try {
+      console.log('Before Update:', updatedTodo);
       await updateTodo(updatedTodo.tno as number, updatedTodo); // 서버에 업데이트 요청
+
+      // todos 상태를 업데이트하여 수정된 writer를 반영
       setTodos((prevTodos) => {
-        const newTodos = prevTodos.map((todo) =>
-          todo.tno === updatedTodo.tno ? updatedTodo : todo // 수정된 데이터를 목록에 반영
+        return prevTodos.map((todo) =>
+          todo.tno === updatedTodo.tno ? { ...todo, writer: updatedTodo.writer, title: updatedTodo.title } : todo
         );
-        return newTodos;
       });
-      refreshTodoList(); // 목록을 다시 불러와 업데이트 반영
+
       closeModal(); // 수정 후 모달 닫기
     } catch (error) {
-      console.error("Failed to update todo:", error); // 오류 발생 시 로그 출력
+      console.error('Failed to update todo:', error);
     }
   };
 
-  // 할 일 목록을 렌더링
   const listLI = todos.map((todo: ITodo) => {
     const { tno, title, writer, dueDate } = todo;
 
     return (
-      <tr
-        key={tno}
-        onClick={() => moveToRead(tno)}
-        className="cursor-pointer hover:bg-gray-100"
-      >
+      <tr key={tno} onClick={() => moveToRead(tno)} className="cursor-pointer hover:bg-gray-100">
         <td className="border-b border-[#eee] py-5 px-4 pl-9">
           <h5 className="font-medium text-black">{tno}</h5>
         </td>
@@ -70,7 +64,6 @@ function TodoListComponent() {
           <p className="text-black">{new Date(dueDate).toLocaleDateString()}</p>
         </td>
         <td className="border-b border-[#eee] py-5 px-4">
-          {/* Edit 버튼 클릭 시 모달 열기 */}
           <button
             onClick={(e) => {
               e.stopPropagation(); // 이벤트 버블링 방지
@@ -102,22 +95,12 @@ function TodoListComponent() {
             <tbody>{listLI}</tbody>
           </table>
         </div>
-        {/* 페이지 컴포넌트 추가 */}
-        {!loading && (
-          <PageComponent
-            pageResponse={pageResponse}
-            changePage={(page) => console.log("Page changed to:", page)}
-          />
-        )}
+        {!loading && <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('Page changed to:', page)} />}
       </div>
 
       {/* 수정 모달 컴포넌트 */}
       {isModalOpen && selectedTodo && (
-        <ModifyComponent
-          todo={selectedTodo}
-          onUpdate={handleUpdateTodo} // 수정 완료 시 호출할 함수
-          onClose={closeModal} // 모달 닫기 함수
-        />
+        <ModifyComponent todo={selectedTodo} onUpdate={handleUpdateTodo} onClose={closeModal} />
       )}
     </div>
   );
