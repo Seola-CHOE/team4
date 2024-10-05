@@ -1,64 +1,71 @@
 import React, { useState } from 'react';
-import { ITodo } from "../../types/todo.ts";
+import { ITodo } from '../../types/todo';
 
 interface ModifyComponentProps {
   todo: ITodo;
-  onUpdate: (todo: ITodo) => void;
-  onDelete: (tno: number) => void;
+  onUpdate: (updatedTodo: ITodo) => void;
   onClose: () => void;
 }
 
-const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onDelete, onClose }) => {
-  const [title, setTitle] = useState(todo.title);
-  const [writer, setWriter] = useState(todo.writer);
-  const [dueDate, setDueDate] = useState(new Date(todo.dueDate).toISOString().substring(0, 10));
+const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClose }) => {
+  const [updatedTodo, setUpdatedTodo] = useState<ITodo>({ ...todo });
 
-  const handleUpdate = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const updatedTodo = { ...todo, title, writer, dueDate };
-    onUpdate(updatedTodo); // 부모 컴포넌트에 수정된 todo 전달
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUpdatedTodo((prevTodo) => ({
+      ...prevTodo,
+      [name]: value,
+    }));
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onDelete(todo.tno); // 부모 컴포넌트에 삭제 요청
+  const handleSave = () => {
+    onUpdate(updatedTodo); // 수정된 데이터를 부모 컴포넌트로 전달
+    onClose(); // 모달 닫기
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white rounded p-5">
-        <h2 className="text-lg font-semibold">Edit Todo</h2>
-        <div className="mt-4">
-          <label>Title:</label>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl font-semibold mb-4">Modify Todo</h2>
+        <div className="flex flex-col space-y-4">
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border p-2 w-full"
+            name="title"
+            className="border border-gray-300 p-2 rounded-lg"
+            value={updatedTodo.title}
+            onChange={handleChange}
+            placeholder="Title"
           />
-        </div>
-        <div className="mt-4">
-          <label>Writer:</label>
           <input
             type="text"
-            value={writer}
-            onChange={(e) => setWriter(e.target.value)}
-            className="border p-2 w-full"
+            name="writer"
+            className="border border-gray-300 p-2 rounded-lg"
+            value={updatedTodo.writer}
+            onChange={handleChange}
+            placeholder="Writer"
           />
-        </div>
-        <div className="mt-4">
-          <label>Due Date:</label>
           <input
             type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            className="border p-2 w-full"
+            name="dueDate"
+            className="border border-gray-300 p-2 rounded-lg"
+            value={updatedTodo.dueDate}
+            onChange={handleChange}
+            placeholder="Due Date"
           />
-        </div>
-        <div className="mt-4 flex justify-between">
-          <button onClick={handleUpdate} className="bg-blue-500 text-white p-2 rounded">Update</button>
-          <button onClick={handleDelete} className="bg-red-500 text-white p-2 rounded">Delete</button>
-          <button onClick={onClose} className="bg-gray-300 p-2 rounded">Close</button>
+          <div className="flex space-x-4">
+            <button
+              className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+              onClick={handleSave} // Save 버튼 클릭 시 수정 내용 저장
+            >
+              Save
+            </button>
+            <button
+              className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,17 +1,17 @@
 import { createSearchParams, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { IPageResponse } from "../types/todo";
-import { getTodoList } from "../api/todoAPI";
+import { IPageResponse, ITodo } from "../types/todo";
+import { getTodoList, updateTodo } from "../api/todoAPI"; // 서버와 통신하는 API 함수 가져오기
 
 // 초기 상태 정의
 const initialState: IPageResponse = {
-    dtoList: [], // 할 일 목록을 저장
-    first: false, // 첫 페이지 여부
-    last: false, // 마지막 페이지 여부
-    number: 0, // 현재 페이지 번호
-    size: 0, // 페이지 크기
-    totalElements: 0, // 전체 요소 수
-    totalPages: 0, // 전체 페이지 수
+    dtoList: [],
+    first: false,
+    last: false,
+    number: 0,
+    size: 0,
+    totalElements: 0,
+    totalPages: 0,
 };
 
 const useTodoList = () => {
@@ -43,34 +43,26 @@ const useTodoList = () => {
         }
     };
 
-    // 페이지나 쿼리 파라미터, 위치 정보가 변경될 때마다 데이터 로드
-    useEffect(() => {
-        // URL에 NaN 값이 포함되었을 때 기본값으로 설정하고 URL 수정
-        if (Number.isNaN(page) || Number.isNaN(size)) {
-            navigate({
-                pathname: location.pathname,
-                search: `?page=1&size=10`, // 기본값 설정
-            });
-            return;
-        }
-
-        // 데이터 로딩 시작
+    // 할 일 목록 데이터를 다시 불러오는 함수
+    const refreshTodoList = () => {
         setLoading(true);
-
-        // 페이지와 사이즈에 따라 할 일 목록을 가져오는 API 호출
         getTodoList(page, size)
           .then((data) => {
-              console.log("Fetched Todo List:", data); // API 응답 데이터 출력
               setPageResponse(data); // API 호출 성공 시 데이터 상태 업데이트
               setLoading(false); // 로딩 종료
           })
           .catch((error) => {
-              console.error("Failed to fetch todo list:", error); // 오류 로그 출력
+              console.error("Failed to refresh todo list:", error); // 오류 로그 출력
               setLoading(false); // 로딩 종료
           });
+    };
+
+    // 페이지나 쿼리 파라미터, 위치 정보가 변경될 때마다 데이터 로드
+    useEffect(() => {
+        refreshTodoList(); // 데이터 새로고침 시 항상 최신 데이터를 가져옴
     }, [page, size, query, location.key, navigate]); // 의존성 배열에 page와 size, query, location.key 추가
 
-    return { loading, pageResponse, moveToRead }; // 훅에서 필요한 값 반환
+    return { loading, pageResponse, moveToRead, refreshTodoList };
 };
 
 export default useTodoList;
