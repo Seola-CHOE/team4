@@ -26,7 +26,7 @@ const useProductList = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [pageResponse, setPageResponse] = useState<IPageResponse>({ initialState });
-  const queryStr = createSearchParams({ page: String(page), size: String(size) });
+  // const queryStr = createSearchParams({ page: String(page), size: String(size) });
 
 
   const refreshProductList = () => {
