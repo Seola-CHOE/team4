@@ -1,6 +1,6 @@
 // import { createSearchParams, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 // import { useEffect, useState } from "react";
-// import { IPageResponse } from "../types/todo";
+// import { IPageResponse } from '../types/product.ts';
 // import { getProductList } from '../api/productAPI.ts';
 //
 // const initialState: IPageResponse = {
@@ -37,7 +37,7 @@
 //         setLoading(false);
 //       })
 //       .catch((error) => {
-//         console.error("Failed to refresh todo list:", error);
+//         console.error("Failed to refresh product list:", error);
 //         setLoading(false);
 //       });
 //   };
