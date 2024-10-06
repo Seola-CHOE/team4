@@ -12,9 +12,9 @@ const initialState: ITodo = {
 };
 
 function TodoReadComponent() {
-  const { tno } = useParams<{ tno: string }>(); // URL 파라미터로부터 tno 가져오기
-  const [todo, setTodo] = useState<ITodo>(initialState); // Todo 상태 초기화
-  const [loading, setLoading] = useState<boolean>(false); // 로딩 상태 관리
+  const { tno } = useParams<{ tno: string }>();
+  const [todo, setTodo] = useState<ITodo>(initialState);
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,9 +43,9 @@ function TodoReadComponent() {
         });
   }, [tno]);
 
-  // 이전 페이지로 돌아가는 함수 정의
+
   const handleCancel = () => {
-    navigate(-1); // 이전 페이지로 이동
+    navigate(-1);
   };
 
   return (
@@ -102,7 +102,7 @@ function TodoReadComponent() {
                       <button
                           className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white bg-blue-500 hover:bg-blue-600 focus:outline-none"
                           type="button"
-                          onClick={handleCancel} // 이전 경로로 이동
+                          onClick={handleCancel}
                       >
                         Back
                       </button>

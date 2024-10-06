@@ -88,7 +88,6 @@ function TodoListComponent() {
   };
 
   const handleRowClick = (tno: number) => {
-    console.log('moveToRead 호출됨:', tno);
     moveToRead(tno);
   };
 
@@ -111,7 +110,7 @@ function TodoListComponent() {
                   e.stopPropagation(); // 이벤트 전파 중지
                   handleCheckboxChange(tno);
                 }}
-                className="form-checkbox h-5 w-5 text-gray-600 border-gray-400 focus:ring-0 focus:outline-none"
+                className="custom-checkbox h-5 w-5"
             />
           </td>
           <td className="border-b border-[#eee] py-5 px-4 text-center">
@@ -152,6 +151,39 @@ function TodoListComponent() {
 
   return (
       <div>
+        {/* 체크박스 스타일을 컴포넌트 내 style 태그에 추가 */}
+        <style>
+          {`
+          /* 체크박스 스타일 */
+          .custom-checkbox {
+            appearance: none; /* 기본 체크박스 스타일 제거 */
+            background-color: white; /* 체크박스 기본 배경색 */
+            border: 2px solid #9ca3af; /* 체크박스 테두리 회색 */
+            border-radius: 4px; /* 모서리 둥글게 */
+            width: 20px; /* 체크박스 너비 */
+            height: 20px; /* 체크박스 높이 */
+            cursor: pointer; /* 커서 포인터로 변경 */
+            position: relative;
+          }
+
+          /* 체크박스가 선택되었을 때 */
+          .custom-checkbox:checked {
+            background-color: #9ca3af; /* 선택되었을 때 배경색 회색 */
+            border-color: #4b5563; /* 선택되었을 때 테두리 색상 */
+          }
+
+          /* 체크박스 체크 표시 스타일 */
+          .custom-checkbox:checked::after {
+            content: '✔'; /* 체크 모양 표시 */
+            font-size: 16px; /* 체크 표시 크기 */
+            color: white; /* 체크 표시 색상 */
+            position: absolute;
+            top: -2px; /* 체크 표시 위치 조정 */
+            left: 2px; /* 체크 표시 위치 조정 */
+          }
+        `}
+        </style>
+
         <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5">
           <div className="max-w-full overflow-x-auto">
             <table className="w-full table-auto">
@@ -182,7 +214,7 @@ function TodoListComponent() {
               <div className="bg-white p-6 rounded-md shadow-md">
                 <h2 className="text-lg font-semibold mb-4">정말로 삭제하시겠습니까?</h2>
                 <div className="flex justify-end">
-                  <button onClick={handleDeleteTodo} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">
+                  <button onClick={handleDeleteTodo} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-black rounded">
                     Delete
                   </button>
                   <button onClick={closeDeleteModal} className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded">
