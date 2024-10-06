@@ -1,6 +1,6 @@
 import { ITodo } from "../../types/todo.ts";
 import { ChangeEvent, useCallback, useState } from "react";
-import { postTodo } from "../../api/todoAPI.tsx";
+import { postTodo } from "../../api/todoAPI.ts";
 import { useNavigate } from "react-router-dom";
 
 const initState: ITodo = {
