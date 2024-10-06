@@ -1,11 +1,11 @@
 import { Navigate } from 'react-router-dom';
 
 
-function IndexPage() {
+function ProductIndexPage() {
   
   return (
       <Navigate to={'/product/list'}></Navigate>
   );
 }
 
-export default IndexPage;
+export default ProductIndexPage;
