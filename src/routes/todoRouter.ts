@@ -1,21 +1,22 @@
 import { lazy } from 'react';
 
 
-const TodoIndex = lazy(() => import("../pages/todos/TodoIndexPage"))
+const Todo = lazy(() => import("../pages/Todo.tsx"))
 const TodoRead = lazy(() => import("../pages/todos/TodoReadPage"))
 const TodoAdd = lazy(() => import("../pages/todos/TodoAddPage"))
 
 
+
 const todoRouter = [
   {
-    path: '/todo',
-    title: 'TodoIndexPage',
-    component: TodoIndex
+    path: '',
+    title: 'Todo',
+    component: Todo
   },
   {
     path: '/todo/list',
-    title: 'TodoIndex',
-    component: TodoIndex
+    title: 'Todo',
+    component: Todo
   },
   {
     path: '/todo/read/:tno',

@@ -6,7 +6,7 @@ const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
 const FormElements = lazy(() => import('../pages/Form/FormElements'));
 const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
-const Todos = lazy(() => import('../pages/Todo'));
+const Todos = lazy(() => import('../pages/Todo.tsx'));
 const Settings = lazy(() => import('../pages/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
