@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useNavigate, useParams} from 'react-router-dom';
 import { useEffect, useState } from "react";
 import { ITodo } from '../../types/todo.ts';
 import { getOne } from '../../api/todoAPI.ts';

@@ -2,6 +2,7 @@ import Breadcrumb from '../components/Breadcrumb.tsx';
 import CoverOne from '../images/cover/cover-01.png';
 import userSix from '../images/user/user-06.png';
 import TodoListPage from "./todos/TodoListPage.tsx";
+import {Navigate} from "react-router-dom";
 
 
 const Todo = () => {
@@ -61,6 +62,7 @@ const Todo = () => {
 
               {/* TodoIndexPage 컴포넌트가 Todo List 바로 아래에 위치하도록 함 */}
               <TodoListPage></TodoListPage>
+              <Navigate to={'/todo/list'}></Navigate>
             </div>
           </div>
         </div>

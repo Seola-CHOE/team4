@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useTodoList from '../../hooks/useTodoList';
 import { ITodo } from '../../types/todo';
 import PageComponent from '../../common/PageComponent';
@@ -100,10 +100,9 @@ function TodoListComponent() {
         <tr
             key={tno}
             className="cursor-pointer hover:bg-gray-100"
-            onClick={() => handleRowClick(tno)} // `tr` 클릭 시 `moveToRead` 함수 호출
+            onClick={() => handleRowClick(tno)} // tr 클릭 시 moveToRead 함수 호출
         >
           <td className="border-b border-[#eee] py-5 px-4 text-center">
-            {/* 체크박스 클릭 시 `tr` 클릭 이벤트와 충돌 방지 */}
             <input
                 type="checkbox"
                 checked={isChecked}
@@ -183,19 +182,12 @@ function TodoListComponent() {
               <div className="bg-white p-6 rounded-md shadow-md">
                 <h2 className="text-lg font-semibold mb-4">정말로 삭제하시겠습니까?</h2>
                 <div className="flex justify-end">
-                  <button
-                      onClick={handleDeleteTodo}
-                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-graydark rounded"
-                  >
-                    delete
+                  <button onClick={handleDeleteTodo} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">
+                    Delete
                   </button>
-                  <button
-                      onClick={closeDeleteModal}
-                      className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded"
-                  >
-                    cancel
+                  <button onClick={closeDeleteModal} className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded">
+                    Cancel
                   </button>
-
                 </div>
               </div>
             </div>

@@ -1,28 +1,24 @@
-import TodoListComponent from '../../components/todos/TodoListComponent';
-import {Link, Navigate} from 'react-router-dom';
-import Todo from "../Todo.tsx";
+
+import { Link } from 'react-router-dom';
+import TodoListComponent from "../../components/todos/TodoListComponent.tsx";
+
 
 function TodoListPage() {
-
     return (
-        <div className="relative p-6"> {/* 부모 div에 패딩을 추가하여 간격 조정 */}
-            {/* 버튼을 작게 만들고, 오른쪽에 배치 */}
-            <div className="flex justify-end mb-4"> {/* flex 컨테이너로 버튼을 오른쪽 정렬 */}
-                <Link
-                    to='add'
-                    className="inline-flex items-center justify-center rounded-full bg-primary py-2 px-4 text-center text-sm font-medium text-white hover:bg-opacity-90"
-                >
-                    ADD
-                </Link>
+        <>
+            <div className='flex items-center gap-3 justify-center border-2 rounded-2xl h-1/4 bg-blue-500'>
+                <Link to='/todo/list' className='font-extrabold m-2 p-2 text-graydark text-2xl'>List</Link>
+                <Link to='/todo/add' className='font-extrabold m-2 p-2 text-graydark text-2xl'>Add</Link>
+            </div>
+            <div>
+                {/*보기에 안예뻐서 주석 처리함*/}
+                <div>Todo List Page</div>
             </div>
 
-            {/* 할 일 목록 컴포넌트 */}
 
             <TodoListComponent />
 
-
-        </div>
-
+        </>
     );
 }
 
