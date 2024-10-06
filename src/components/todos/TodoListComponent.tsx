@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useTodoList from '../../hooks/useTodoList';
 import { ITodo } from '../../types/todo';
 import PageComponent from '../../common/PageComponent';
@@ -143,13 +143,13 @@ function TodoListComponent() {
                 onClick={closeDeleteModal}
                 className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded"
               >
-                삭제
+                취소
               </button>
               <button
                 onClick={handleDeleteTodo}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-black rounded"
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
               >
-                취소
+                삭제
               </button>
             </div>
           </div>
