@@ -1,7 +1,8 @@
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../components/Breadcrumb.tsx';
 import CoverOne from '../images/cover/cover-01.png';
 import userSix from '../images/user/user-06.png';
-import TodoIndexPage from './todos/TodoIndexPage.tsx';
+import TodoListPage from "./todos/TodoListPage.tsx";
+
 
 const Todo = () => {
   return (
@@ -59,7 +60,7 @@ const Todo = () => {
               </h1>
 
               {/* TodoIndexPage 컴포넌트가 Todo List 바로 아래에 위치하도록 함 */}
-              <TodoIndexPage />
+              <TodoListPage></TodoListPage>
             </div>
           </div>
         </div>

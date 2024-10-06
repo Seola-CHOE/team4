@@ -1,8 +1,9 @@
-import React from 'react';
 import TodoListComponent from '../../components/todos/TodoListComponent';
-import { Link } from 'react-router-dom';
+import {Link, Navigate} from 'react-router-dom';
+import Todo from "../Todo.tsx";
 
 function TodoListPage() {
+
     return (
         <div className="relative p-6"> {/* 부모 div에 패딩을 추가하여 간격 조정 */}
             {/* 버튼을 작게 만들고, 오른쪽에 배치 */}
@@ -16,8 +17,12 @@ function TodoListPage() {
             </div>
 
             {/* 할 일 목록 컴포넌트 */}
+
             <TodoListComponent />
+
+
         </div>
+
     );
 }
 
