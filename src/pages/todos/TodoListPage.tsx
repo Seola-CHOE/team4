@@ -10,6 +10,7 @@ function TodoListPage() {
         <Link to='/todo/add' className='font-extrabold m-2 p-2 text-graydark text-2xl'>Add</Link>
       </div>
       <div>
+        {/*보기에 안예뻐서 주석 처리함*/}
         <div>Todo List Page</div>
       </div>
 

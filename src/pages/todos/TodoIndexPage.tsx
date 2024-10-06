@@ -5,7 +5,8 @@ import TodoListPage from './TodoListPage.tsx';
 function TodoIndexPage() {
   return (
     <div>
-      <div>Todo Index Page</div>
+      {/*보기에 안예뻐서 주석 처리함*/}
+      {/*<div>Todo Index Page</div>*/}
 
       <div><TodoListPage/></div>
 

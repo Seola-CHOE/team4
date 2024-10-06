@@ -32,31 +32,31 @@ function TodoReadComponent() {
 
     setLoading(true); // 로딩 상태 활성화
     getOne(tnoNum)
-      .then(result => {
-        setTodo(result); // 가져온 데이터를 상태로 설정
-        setLoading(false); // 로딩 상태 비활성화
-      })
-      .catch(error => {
-        console.error("Failed to fetch todo:", error);
-        setLoading(false); // 에러 발생 시 로딩 상태 비활성화
-      });
+        .then(result => {
+          setTodo(result); // 가져온 데이터를 상태로 설정
+          setLoading(false); // 로딩 상태 비활성화
+        })
+        .catch(error => {
+          console.error("Failed to fetch todo:", error);
+          setLoading(false); // 에러 발생 시 로딩 상태 비활성화
+        });
   }, [tno]); // tno가 변경될 때마다 useEffect 실행
 
   return (
-    <div>
-      {loading ? (
-        <div>Loading...</div> // 로딩 중일 때 표시
-      ) : (
-        <div>
-          <h1>Todo 상세 보기</h1>
-          <div><strong>번호:</strong> {todo.tno}</div>
-          <div><strong>제목:</strong> {todo.title}</div>
-          <div><strong>작성자:</strong> {todo.writer}</div>
-          <div><strong>마감일:</strong> {todo.dueDate}</div>
-          <div><strong>완료 여부:</strong> {todo.complete ? '완료' : '미완료'}</div>
-        </div>
-      )}
-    </div>
+      <div>
+        {loading ? (
+            <div>Loading...</div> // 로딩 중일 때 표시
+        ) : (
+            <div>
+              <h1>Todo 상세 보기</h1>
+              <div><strong>번호:</strong> {todo.tno}</div>
+              <div><strong>제목:</strong> {todo.title}</div>
+              <div><strong>작성자:</strong> {todo.writer}</div>
+              <div><strong>마감일:</strong> {todo.dueDate}</div>
+              <div><strong>완료 여부:</strong> {todo.complete ? '완료' : '미완료'}</div>
+            </div>
+        )}
+      </div>
   );
 }
 
