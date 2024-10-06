@@ -58,7 +58,7 @@ function TodoAddComponent() {
                 value={todo.writer}
                 onChange={handleChange}
             />
-            <label className="text-sm font-semibold text-gray-700">Due Date</label>
+            <label className="text-sm font-semibold text-gray-700">DueDate</label>
             <input
                 type="date"
                 name="dueDate"
