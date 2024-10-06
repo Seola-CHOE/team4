@@ -14,7 +14,7 @@ function TodoListComponent() {
 
   useEffect(() => {
     if (pageResponse && Array.isArray(pageResponse.dtoList)) {
-      setTodos(pageResponse.dtoList);
+      setTodos(pageResponse.dtoList.map((todo, index) => ({ ...todo, tno: index + 1 })));
     }
   }, [pageResponse]);
 
@@ -60,7 +60,10 @@ function TodoListComponent() {
     if (!selectedTodo) return;
     try {
       await deleteTodo(selectedTodo.tno as number);
-      setTodos((prevTodos) => prevTodos.filter((todo) => todo.tno !== selectedTodo.tno));
+      setTodos((prevTodos) => {
+        const updatedTodos = prevTodos.filter((todo) => todo.tno !== selectedTodo.tno);
+        return updatedTodos.map((todo, index) => ({ ...todo, tno: index + 1 }));
+      });
       closeDeleteModal();
     } catch (error) {
       console.error('할 일 삭제 실패:', error);
