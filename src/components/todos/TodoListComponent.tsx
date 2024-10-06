@@ -11,6 +11,15 @@ function TodoListComponent() {
   const [isModifyModalOpen, setModifyModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [selectedTodo, setSelectedTodo] = useState<ITodo | null>(null);
+  const [selectedTodos, setSelectedTodos] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const savedSelectedTodos = localStorage.getItem('selectedTodos');
+    if (savedSelectedTodos) {
+      const parsedSelectedTodos = JSON.parse(savedSelectedTodos) as number[];
+      setSelectedTodos(new Set(parsedSelectedTodos));
+    }
+  }, []);
 
   useEffect(() => {
     if (pageResponse && Array.isArray(pageResponse.dtoList)) {
@@ -65,27 +74,63 @@ function TodoListComponent() {
     }
   };
 
+  const handleCheckboxChange = (tno: number) => {
+    setSelectedTodos((prevSelectedTodos) => {
+      const updatedSelectedTodos = new Set(prevSelectedTodos);
+      if (updatedSelectedTodos.has(tno)) {
+        updatedSelectedTodos.delete(tno);
+      } else {
+        updatedSelectedTodos.add(tno);
+      }
+      localStorage.setItem('selectedTodos', JSON.stringify(Array.from(updatedSelectedTodos)));
+      return updatedSelectedTodos;
+    });
+  };
+
+  const handleRowClick = (tno: number) => {
+    console.log('moveToRead 호출됨:', tno);
+    moveToRead(tno);
+  };
+
   const listLI = todos.map((todo: ITodo) => {
     const { tno, title, writer, dueDate } = todo;
+    const isChecked = selectedTodos.has(tno);
 
     return (
-        <tr key={tno} onClick={() => moveToRead(tno)} className="cursor-pointer hover:bg-gray-100">
-          <td className="border-b border-[#eee] py-5 px-4 pl-9">
-            <h5 className="font-medium text-black">{tno}</h5>
+        <tr
+            key={tno}
+            className="cursor-pointer hover:bg-gray-100"
+            onClick={() => handleRowClick(tno)} // `tr` 클릭 시 `moveToRead` 함수 호출
+        >
+          <td className="border-b border-[#eee] py-5 px-4 text-center">
+            {/* 체크박스 클릭 시 `tr` 클릭 이벤트와 충돌 방지 */}
+            <input
+                type="checkbox"
+                checked={isChecked}
+                onClick={(e) => e.stopPropagation()} // 클릭 이벤트 전파 중지
+                onChange={(e) => {
+                  e.stopPropagation(); // 이벤트 전파 중지
+                  handleCheckboxChange(tno);
+                }}
+                className="form-checkbox h-5 w-5 text-gray-600 border-gray-400 focus:ring-0 focus:outline-none"
+            />
           </td>
-          <td className="border-b border-[#eee] py-5 px-4">
-            <p className="text-black">{title}</p>
+          <td className="border-b border-[#eee] py-5 px-4 text-center">
+            <h5 className={`font-medium text-black ${isChecked ? 'line-through' : ''}`}>{tno}</h5>
           </td>
-          <td className="border-b border-[#eee] py-5 px-4">
-            <p className="text-black">{writer}</p>
+          <td className="border-b border-[#eee] py-5 px-4 text-left">
+            <p className={`text-black ${isChecked ? 'line-through' : ''}`}>{title}</p>
           </td>
-          <td className="border-b border-[#eee] py-5 px-4">
-            <p className="text-black">{new Date(dueDate).toLocaleDateString()}</p>
+          <td className="border-b border-[#eee] py-5 px-4 text-left">
+            <p className={`text-black ${isChecked ? 'line-through' : ''}`}>{writer}</p>
           </td>
-          <td className="border-b border-[#eee] py-5 px-4">
+          <td className="border-b border-[#eee] py-5 px-4 text-left">
+            <p className={`text-black ${isChecked ? 'line-through' : ''}`}>{new Date(dueDate).toLocaleDateString()}</p>
+          </td>
+          <td className="border-b border-[#eee] py-5 px-4 text-left">
             <button
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation(); // 수정 버튼 클릭 시 이벤트 전파 중지
                   openModifyModal(todo);
                 }}
                 className="text-blue-500 hover:text-blue-700 mr-3"
@@ -94,7 +139,7 @@ function TodoListComponent() {
             </button>
             <button
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation(); // 삭제 버튼 클릭 시 이벤트 전파 중지
                   openDeleteModal(todo);
                 }}
                 className="text-red-500 hover:text-red-700"
@@ -113,17 +158,20 @@ function TodoListComponent() {
             <table className="w-full table-auto">
               <thead>
               <tr className="bg-gray-2 text-left">
-                <th className="min-w-[220px] py-4 px-4">No.</th>
-                <th className="min-w-[220px] py-4 px-4">제목</th>
-                <th className="min-w-[150px] py-4 px-4">작성자</th>
-                <th className="py-4 px-4">기한</th>
-                <th className="py-4 px-4">수정/삭제</th>
+                <th className="min-w-[50px] py-4 px-4 text-center"> {/* 체크박스 열 */}</th>
+                <th className="min-w-[80px] py-4 px-4 text-center">No.</th>
+                <th className="min-w-[220px] py-4 px-4 text-left">제목</th>
+                <th className="min-w-[150px] py-4 px-4 text-left">작성자</th>
+                <th className="py-4 px-4 text-left">기한</th>
+                <th className="py-4 px-4 text-left">수정/삭제</th>
               </tr>
               </thead>
               <tbody>{listLI}</tbody>
             </table>
           </div>
-          {!loading && <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('페이지 변경:', page)} />}
+          {!loading && (
+              <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('페이지 변경:', page)} />
+          )}
         </div>
 
         {isModifyModalOpen && selectedTodo && (
