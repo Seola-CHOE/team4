@@ -135,7 +135,7 @@ function TodoListComponent() {
                 }}
                 className="text-blue-500 hover:text-blue-700 mr-3"
             >
-              수정
+              Modi
             </button>
             <button
                 onClick={(e) => {
@@ -144,7 +144,7 @@ function TodoListComponent() {
                 }}
                 className="text-red-500 hover:text-red-700"
             >
-              삭제
+              Del
             </button>
           </td>
         </tr>
@@ -160,10 +160,10 @@ function TodoListComponent() {
               <tr className="bg-gray-2 text-left">
                 <th className="min-w-[50px] py-4 px-4 text-center"> {/* 체크박스 열 */}</th>
                 <th className="min-w-[80px] py-4 px-4 text-center">No.</th>
-                <th className="min-w-[220px] py-4 px-4 text-left">제목</th>
-                <th className="min-w-[150px] py-4 px-4 text-left">작성자</th>
-                <th className="py-4 px-4 text-left">기한</th>
-                <th className="py-4 px-4 text-left">수정/삭제</th>
+                <th className="min-w-[220px] py-4 px-4 text-left">Title</th>
+                <th className="min-w-[150px] py-4 px-4 text-left">Writer</th>
+                <th className="py-4 px-4 text-left">Duedate</th>
+                <th className="py-4 px-4 text-left">Modi/Del</th>
               </tr>
               </thead>
               <tbody>{listLI}</tbody>
@@ -184,17 +184,18 @@ function TodoListComponent() {
                 <h2 className="text-lg font-semibold mb-4">정말로 삭제하시겠습니까?</h2>
                 <div className="flex justify-end">
                   <button
+                      onClick={handleDeleteTodo}
+                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-graydark rounded"
+                  >
+                    delete
+                  </button>
+                  <button
                       onClick={closeDeleteModal}
                       className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded"
                   >
-                    취소
+                    cancel
                   </button>
-                  <button
-                      onClick={handleDeleteTodo}
-                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded"
-                  >
-                    삭제
-                  </button>
+
                 </div>
               </div>
             </div>
