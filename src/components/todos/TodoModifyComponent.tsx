@@ -63,11 +63,11 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClo
           />
           <div className="flex space-x-4">
             {/* Save 버튼 */}
-            <button className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600" onClick={handleSave}>
+            <button className="bg-primary text-white p-2 rounded-lg hover:bg-blue-600" onClick={handleSave}>
               Save
             </button>
             {/* Cancel 버튼 */}
-            <button className="bg-gray-500 text-white p-2 rounded-lg hover:bg-gray-600" onClick={onClose}>
+            <button className="bg-danger text-white p-2 rounded-lg hover:bg-gray-600" onClick={onClose}>
               Cancel
             </button>
           </div>
