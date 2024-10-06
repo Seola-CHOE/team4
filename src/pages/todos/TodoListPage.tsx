@@ -33,7 +33,7 @@ function TodoListPage() {
                   />
                 </svg>
               </span>
-                    Add
+                    ADD
                 </Link>
             </div>
 
