@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function TodoListPage() {
     return (
         <>
-            <div className="flex justify-end">
+            <div className="flex justify-end m-4">
                 <Link
                     to="/todo/add"
                     className="inline-flex items-center justify-center gap-2.5 rounded-md bg-black py-3 px-6 max-w-xs text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-6"

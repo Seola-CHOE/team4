@@ -4,6 +4,8 @@ import { ITodo } from '../../types/todo';
 import PageComponent from '../../common/PageComponent';
 import ModifyComponent from '../todos/TodoModifyComponent';
 import { updateTodo, deleteTodo } from '../../api/todoAPI';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function TodoListComponent() {
   const { pageResponse, moveToRead, loading } = useTodoList();
@@ -125,7 +127,7 @@ function TodoListComponent() {
           <td className="border-b border-[#eee] py-5 px-4 text-left">
             <p className={`text-black ${isChecked ? 'line-through' : ''}`}>{new Date(dueDate).toLocaleDateString()}</p>
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 text-left">
+          <td className="border-b border-[#eee] py-5 px-6 text-left">
             <button
                 onClick={(e) => {
                   e.stopPropagation(); // 수정 버튼 클릭 시 이벤트 전파 중지
@@ -133,7 +135,7 @@ function TodoListComponent() {
                 }}
                 className="text-blue-500 hover:text-blue-700 mr-3"
             >
-              Modi
+              <FontAwesomeIcon icon={faPenToSquare} />
             </button>
             <button
                 onClick={(e) => {
@@ -142,7 +144,7 @@ function TodoListComponent() {
                 }}
                 className="text-red-500 hover:text-red-700"
             >
-              Del
+              <FontAwesomeIcon icon={faTrash} />
             </button>
           </td>
         </tr>
@@ -194,7 +196,7 @@ function TodoListComponent() {
                 <th className="min-w-[220px] py-4 px-4 text-left">Title</th>
                 <th className="min-w-[150px] py-4 px-4 text-left">Writer</th>
                 <th className="py-4 px-4 text-left">Duedate</th>
-                <th className="py-4 px-4 text-left">Modi/Del</th>
+                <th className="py-4 px-4 text-left">Edit/Del</th>
               </tr>
               </thead>
               <tbody>{listLI}</tbody>
