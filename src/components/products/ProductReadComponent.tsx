@@ -1,54 +1,73 @@
 // ReadPage.tsx
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getOne } from '../../api/productAPI';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import UpdateModal from '../../common/modal/UpdateModal';
 import DeleteModal from '../../common/modal/DeleteModal';
+import useProduct from '../../hooks/useProduct'; // 커스텀 훅을 올바르게 임포트
 import { IProduct } from '../../types/product';
-
-// 초기 상태 정의
-const initialState: IProduct = {
-  pno: 0,
-  pname: '',
-  pdesc: '',
-  price: 0,
-  uploadFileNames: [],
-  del_flag: false,
-};
 
 function ReadPage() {
   const { pno } = useParams<{ pno: string }>(); // URL 파라미터에서 pno를 가져옴
-  const [product, setProduct] = useState<IProduct>({ ...initialState });
-  const [loading, setLoading] = useState<boolean>(true);
+  const { product, loading, fetchProduct } = useProduct(pno); // Custom Hook 사용
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // 현재 이미지 인덱스 상태 추가
   const navigate = useNavigate();
+  const [query, setQuery] = useSearchParams(); // URL의 query 파라미터를 관리하는 훅
+
+  // URL 파라미터 초기 설정 (필요 시)
+  useEffect(() => {
+    if (!query.get('page') || !query.get('size')) {
+      setQuery({ page: '1', size: '10' });
+    }
+  }, [query, setQuery]);
 
   useEffect(() => {
-    if (pno) {
-      getProduct(parseInt(pno));
+    if (product?.uploadFileNames.length) {
+      setCurrentImageIndex(0); // 이미지 업데이트 시 인덱스 초기화
     }
-  }, [pno]);
+  }, [product?.uploadFileNames]);
 
-  useEffect(() => {
-    // 이미지가 업데이트되면 currentImageIndex를 초기화
-    if (product.uploadFileNames.length > 0) {
-      setCurrentImageIndex(0); // 이미지가 업데이트될 때마다 인덱스 초기화
-    }
-  }, [product.uploadFileNames]);
+  // 리스트 페이지로 이동 함수
+  const moveToList = () => {
+    navigate(`/product/list?page=${query.get('page') || 1}&size=${query.get('size') || 10}`);
+  };
 
-  // 제품 정보를 가져오는 비동기 함수
-  const getProduct = async (pno: number) => {
-    try {
-      const productData = await getOne(pno);
-      setProduct(productData);
-      setLoading(false);
-    } catch (err) {
-      console.log('Failed to fetch product:', err);
-      setLoading(false);
+  // 모달 상태 관리 함수
+  const toggleModal = (type: 'update' | 'delete', isOpen: boolean) => {
+    if (type === 'update') {
+      setIsUpdateModalOpen(isOpen);
+      setSelectedProduct(product); // update 모달 열기 시 선택된 제품 상태 설정
     }
+    if (type === 'delete') {
+      setIsDeleteModalOpen(isOpen);
+      setSelectedProduct(product); // delete 모달 열기 시 선택된 제품 상태 설정
+    }
+  };
+
+  // 제품 정보 새로고침
+  const refreshProduct = () => {
+    fetchProduct();
+    navigate(`/product/read/${pno}?page=${query.get('page') || 1}&size=${query.get('size') || 10}`);
+  };
+
+  // 삭제 처리 함수
+  const handleDelete = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedProduct(null);
+    moveToList(); // 삭제 후 리스트 페이지로 이동
+  };
+
+  // 이미지 이동 함수
+  const changeImage = (direction: 'next' | 'prev') => {
+    if (!product) return;
+    const totalImages = product.uploadFileNames.length;
+    setCurrentImageIndex((prevIndex) => {
+      if (direction === 'next') return (prevIndex + 1) % totalImages;
+      if (direction === 'prev') return prevIndex === 0 ? totalImages - 1 : prevIndex - 1;
+      return prevIndex;
+    });
   };
 
   if (loading) {
@@ -58,62 +77,6 @@ function ReadPage() {
       </div>
     );
   }
-
-  // 리스트 페이지로 이동 함수
-  const moveToList = () => {
-    navigate('/product/list');
-  };
-
-  // Update 모달 열기 함수
-  const openUpdateModal = () => {
-    setSelectedProduct(product);
-    setIsUpdateModalOpen(true);
-  };
-
-  // Update 모달 닫기 함수
-  const closeUpdateModal = () => {
-    setSelectedProduct(null); // 모달 닫을 때 상태 초기화
-    setIsUpdateModalOpen(false);
-    refreshProduct(); // 상태 새로고침
-  };
-
-  // Delete 모달 열기 함수
-  const openDeleteModal = () => {
-    setSelectedProduct(product);
-    setIsDeleteModalOpen(true);
-  };
-
-  // Delete 모달 닫기 함수
-  const closeDeleteModal = () => {
-    setSelectedProduct(null);
-    setIsDeleteModalOpen(false);
-  };
-
-  // 상태 새로고침 함수
-  const refreshProduct = () => {
-    if (pno) {
-      getProduct(parseInt(pno)); // 상태 업데이트를 위해 제품 정보 다시 가져오기
-    }
-  };
-
-  // 삭제 처리 함수
-  const handleDelete = () => {
-    setProduct({ ...initialState }); // 삭제 후 상태 초기화
-    setIsDeleteModalOpen(false); // 삭제 모달 닫기
-    moveToList(); // 리스트 페이지로 이동
-  };
-
-  // 다음 이미지로 이동하는 함수
-  const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % product.uploadFileNames.length);
-  };
-
-  // 이전 이미지로 이동하는 함수
-  const prevImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      prevIndex === 0 ? product.uploadFileNames.length - 1 : prevIndex - 1
-    );
-  };
 
   return (
     <div className="container mx-auto p-8 max-w-4xl bg-gray-2 rounded-xl shadow-default">
@@ -139,31 +102,19 @@ function ReadPage() {
               <div className="relative flex items-center justify-center">
                 {/* 이미지 슬라이드 컨테이너 */}
                 <div className="relative">
-                  {/* 현재 선택된 이미지 */}
                   <img
                     src={`http://localhost:8089/api/products/view/${product.uploadFileNames[currentImageIndex]}`}
                     alt={`${product.pname} image ${currentImageIndex + 1}`}
                     className="rounded-lg shadow-lg object-cover w-64 h-64 transform transition-all duration-300 hover:scale-105"
-                    onError={(e) => {
-                      e.currentTarget.src = '/default-image.png'; // 이미지 로드 오류 시 대체 이미지
-                    }}
+                    onError={(e) => (e.currentTarget.src = '/default-image.png')} // 이미지 로드 오류 시 대체 이미지
                   />
                 </div>
-                {/* 이전/다음 버튼은 이미지가 2개 이상일 때만 표시 */}
                 {product.uploadFileNames.length > 1 && (
                   <>
-                    {/* 이전 이미지 버튼 */}
-                    <button
-                      onClick={prevImage}
-                      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800  rounded-full p-2 hover:bg-gray-700 focus:outline-none"
-                    >
+                    <button onClick={() => changeImage('prev')} className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none">
                       &#9664;
                     </button>
-                    {/* 다음 이미지 버튼 */}
-                    <button
-                      onClick={nextImage}
-                      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none"
-                    >
+                    <button onClick={() => changeImage('next')} className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 rounded-full p-2 hover:bg-gray-700 focus:outline-none">
                       &#9654;
                     </button>
                   </>
@@ -173,41 +124,32 @@ function ReadPage() {
           </div>
         )}
         <div className="flex justify-center mt-8 space-x-6">
-          <button
-            className="bg-primary hover:bg-blue-700 text-white py-2 px-8 rounded-lg font-semibold shadow-lg transition duration-300 ease-in-out"
-            onClick={moveToList}
-          >
+          <button className="bg-primary hover:bg-blue-700 text-white py-2 px-8 rounded-lg font-semibold shadow-lg transition duration-300 ease-in-out" onClick={moveToList}>
             LIST
           </button>
-          <button
-            className="bg-success hover:bg-meta-3 text-white py-2 px-8 rounded-lg font-semibold shadow-lg transition duration-300 ease-in-out"
-            onClick={openUpdateModal}
-          >
+          <button className="bg-success hover:bg-meta-3 text-white py-2 px-8 rounded-lg font-semibold shadow-lg transition duration-300 ease-in-out" onClick={() => toggleModal('update', true)}>
             UPDATE
           </button>
-          <button
-            className="bg-danger hover:bg-meta-7 text-white py-2 px-8 rounded-lg font-semibold shadow-lg transition duration-300 ease-in-out"
-            onClick={openDeleteModal}
-          >
+          <button className="bg-danger hover:bg-meta-7 text-white py-2 px-8 rounded-lg font-semibold shadow-lg transition duration-300 ease-in-out" onClick={() => toggleModal('delete', true)}>
             DELETE
           </button>
         </div>
       </div>
 
+      {/* Update, Delete 모달 컴포넌트 렌더링 */}
       <UpdateModal
         isCorrectionModalOpen={isUpdateModalOpen}
-        closeCorrectionModal={closeUpdateModal}
-        selectedProduct={selectedProduct}
-        setSelectedProduct={setSelectedProduct}
-        refreshProduct={refreshProduct}
+        closeCorrectionModal={() => toggleModal('update', false)}
+        selectedProduct={selectedProduct} // 선택된 제품 상태 전달
+        setSelectedProduct={setSelectedProduct} // setSelectedProduct 함수 전달
+        refreshProduct={refreshProduct} // 새로고침 함수 전달
       />
-
       <DeleteModal
         isDeleteModalOpen={isDeleteModalOpen}
-        closeDeleteModal={closeDeleteModal}
-        selectedProduct={selectedProduct}
+        closeDeleteModal={() => toggleModal('delete', false)}
+        selectedProduct={selectedProduct} // 선택된 제품 상태 전달
         handleDelete={handleDelete} // 삭제 처리 함수 전달
-        navigateToList={moveToList} // 삭제 후 리스트 페이지로 이동
+        navigateToList={moveToList} // 리스트 페이지로 이동 함수 전달
       />
     </div>
   );
