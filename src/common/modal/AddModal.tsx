@@ -31,6 +31,7 @@ function AddModal({
                 },
                 overlay: {
                     backgroundColor: 'rgba(0, 0, 0, 0.5)', // 배경색 설정
+                    zIndex: '99',
                 },
             }}
             contentLabel="Add Confirmation Modal"
