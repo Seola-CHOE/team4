@@ -75,7 +75,7 @@ function ProductListComponent() {
       </div>
 
       {/* 카테고리 선택 버튼 */}
-      <div className='flex m-4 p-2 justify-center gap-8'>
+      <div className='flex m-4 p-2 justify-center gap-8 border border-gray-400'>
         <button className='p-2 underline' onClick={() => changeSort('ALL')}>ALL</button>
         <button className='p-2 underline' onClick={() => changeSort('Daily goods')}>Daily goods</button>
         <button className='p-2 underline' onClick={() => changeSort('Electronics')}>Electronics</button>
