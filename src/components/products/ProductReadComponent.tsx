@@ -1,4 +1,3 @@
-// ReadPage.tsx
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import UpdateModal from '../../common/modal/UpdateModal';
@@ -23,14 +22,49 @@ function ReadPage() {
     }
   }, [query, setQuery]);
 
+  // 제품 정보가 업데이트될 때 이미지 인덱스를 초기화
   useEffect(() => {
     if (product?.uploadFileNames.length) {
       setCurrentImageIndex(0); // 이미지 업데이트 시 인덱스 초기화
     }
   }, [product?.uploadFileNames]);
 
+  // 히스토리 상태를 관리하기 위한 설정 추가
+  useEffect(() => {
+    // 현재 페이지 상태를 히스토리에 추가
+    window.history.pushState(
+      { page: `/product/read/${pno}` },
+      '',
+      `/product/read/${pno}?page=${query.get('page') || 1}&size=${query.get('size') || 10}`
+    );
+
+    // popstate 이벤트를 감지하여 뒤로 가기 이벤트 처리
+    const handlePopState = (event: PopStateEvent) => {
+      console.log('popstate event detected', event.state); // 이벤트 발생 여부 확인용 로그
+
+      // 이전 상태로 돌아갈 때 리스트 페이지로 이동
+      if (event.state?.page) {
+        navigate(`/product/list?page=${query.get('page') || 1}&size=${query.get('size') || 10}`, { replace: true });
+      }
+    };
+
+    // popstate 이벤트 리스너 추가
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      // 컴포넌트 언마운트 시 이벤트 리스너 제거
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [pno, query, navigate]);
+
   // 리스트 페이지로 이동 함수
   const moveToList = () => {
+    // 히스토리 상태를 변경하여 리스트 페이지로 이동
+    window.history.pushState(
+      { page: '/product/list' },
+      '',
+      `/product/list?page=${query.get('page') || 1}&size=${query.get('size') || 10}`
+    );
     navigate(`/product/list?page=${query.get('page') || 1}&size=${query.get('size') || 10}`);
   };
 
@@ -49,6 +83,11 @@ function ReadPage() {
   // 제품 정보 새로고침
   const refreshProduct = () => {
     fetchProduct();
+    window.history.replaceState(
+      { page: `/product/read/${pno}` },
+      '',
+      `/product/read/${pno}?page=${query.get('page') || 1}&size=${query.get('size') || 10}`
+    );
     navigate(`/product/read/${pno}?page=${query.get('page') || 1}&size=${query.get('size') || 10}`);
   };
 
@@ -70,6 +109,7 @@ function ReadPage() {
     });
   };
 
+  // 로딩 중일 때 보여줄 화면
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -78,6 +118,7 @@ function ReadPage() {
     );
   }
 
+  // 실제 화면 렌더링
   return (
     <div className="container mx-auto p-8 max-w-4xl bg-gray-2 rounded-xl shadow-default">
       <div className="bg-white rounded-lg shadow-card p-8 transition-all duration-300 hover:shadow-card-2">
@@ -106,7 +147,7 @@ function ReadPage() {
                     src={`http://localhost:8089/api/products/view/${product.uploadFileNames[currentImageIndex]}`}
                     alt={`${product.pname} image ${currentImageIndex + 1}`}
                     className="rounded-lg shadow-lg object-cover w-64 h-64 transform transition-all duration-300 hover:scale-105"
-                    onError={(e) => (e.currentTarget.src = '/default-image.png')} // 이미지 로드 오류 시 대체 이미지
+                    onError={(e) => (e.currentTarget.src = '/default-image.png')}
                   />
                 </div>
                 {product.uploadFileNames.length > 1 && (
