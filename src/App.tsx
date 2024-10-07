@@ -7,9 +7,7 @@ import ECommerce from './pages/Dashboard/ECommerce';
 import SignIn from './pages/Authentication/SignIn';
 import SignUp from './pages/Authentication/SignUp';
 import Loader from './common/Loader';
-import ListPage from './components/products/ProductListComponent.tsx'; // ListPage import 추가
 import routes from './routes';
-import ReadPage from './components/products/ProductReadComponent.tsx';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -33,9 +31,6 @@ function App() {
         <Route path="/auth/signup" element={<SignUp />} />
         <Route element={<DefaultLayout />}>
           <Route index element={<ECommerce />} />
-          {/* ReadPage와 ListPage에 대한 라우트 추가 */}
-          <Route path="/product/list" element={<ListPage />} />
-          <Route path="/product/read/:pno" element={<ReadPage />} />
           {/* 기존의 routes 배열을 통해 나머지 페이지 설정 */}
           {routes.map((route, index) => {
             const { path, component: Component } = route;

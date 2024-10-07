@@ -24,7 +24,7 @@ function PageComponent({ pageResponse, changePage }: Props): ReactElement {
   const endPage: number =
     pageResponse.totalPage < tempLast ? pageResponse.totalPage : tempLast;
   const prev: boolean = startPage !== 1;
-  const next: boolean = tempLast < pageResponse.totalPage;
+  const next: boolean = true;
 
   // 페이지 번호 배열 생성
   const pageNums: number[] = makeArr(startPage, endPage);
