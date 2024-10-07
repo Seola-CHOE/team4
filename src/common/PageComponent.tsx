@@ -37,7 +37,8 @@ function PageComponent({ pageResponse, changePage }: Props): ReactElement {
     const finalEndPage: number = totalPage < tempLastPage ? totalPage : tempLastPage;
 
     // 이전 페이지 그룹으로 이동할 수 있는지 여부 확인
-    const showPrevButton: boolean = current > 1;
+    // 첫 10페이지까지는 Prev 버튼이 나타나지 않도록 수정
+    const showPrevButton: boolean = current > 10;
 
     // 다음 페이지 그룹으로 이동할 수 있는지 여부 확인
     const showNextButton: boolean = current < totalPage;
@@ -73,43 +74,43 @@ function PageComponent({ pageResponse, changePage }: Props): ReactElement {
   };
 
   return (
-    <div>
-      {/* 페이지네이션 버튼들을 렌더링 */}
-      <ul className="flex justify-center items-center space-x-2 mt-6">
-        {/* Prev 버튼 렌더링 */}
-        {prevButtonVisible && (
-          <li
-            className="px-4 py-2 text-white bg-primary border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all ease-in-out duration-300"
-            key="prev" // key 값은 고유한 문자열로 설정
-            onClick={() => handleChangePage(currentPage - 1)} // 이전 페이지로 이동
-          >
-            Prev
-          </li>
-        )}
+      <div>
+        {/* 페이지네이션 버튼들을 렌더링 */}
+        <ul className="flex justify-center items-center space-x-2 mt-6">
+          {/* Prev 버튼 렌더링 - 첫 10페이지에서는 나타나지 않도록 설정 */}
+          {prevButtonVisible && (
+              <li
+                  className="px-4 py-2 text-white bg-primary border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all ease-in-out duration-300 cursor-pointer"
+                  key="prev" // key 값은 고유한 문자열로 설정
+                  onClick={() => handleChangePage(currentPage - 1)} // 이전 페이지로 이동
+              >
+                Prev
+              </li>
+          )}
 
-        {/* 페이지 번호 리스트 렌더링 */}
-        {pageNumbers.map((num) => (
-          <li
-            className={`px-4 py-2 ${num === currentPage ? 'bg-primary' : 'bg-primary'} text-white border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300`}
-            key={num}
-            onClick={() => handleChangePage(num)} // 각 페이지 번호 클릭 시 해당 페이지로 이동
-          >
-            {num}
-          </li>
-        ))}
+          {/* 페이지 번호 리스트 렌더링 */}
+          {pageNumbers.map((num) => (
+              <li
+                  className={`px-4 py-2 ${num === currentPage ? 'bg-primary text-white' : 'bg-white text-black'} border border-primary rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 cursor-pointer`}
+                  key={num}
+                  onClick={() => handleChangePage(num)} // 각 페이지 번호 클릭 시 해당 페이지로 이동
+              >
+                {num}
+              </li>
+          ))}
 
-        {/* Next 버튼 렌더링 */}
-        {nextButtonVisible && (
-          <li
-            className="px-4 py-2 text-white bg-primary border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all ease-in-out duration-300"
-            key="next" // key 값은 고유한 문자열로 설정
-            onClick={() => handleChangePage(currentPage + 1)} // 다음 페이지로 이동
-          >
-            Next
-          </li>
-        )}
-      </ul>
-    </div>
+          {/* Next 버튼 렌더링 */}
+          {nextButtonVisible && (
+              <li
+                  className="px-4 py-2 text-white bg-primary border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all ease-in-out duration-300 cursor-pointer"
+                  key="next" // key 값은 고유한 문자열로 설정
+                  onClick={() => handleChangePage(currentPage + 1)} // 다음 페이지로 이동
+              >
+                Next
+              </li>
+          )}
+        </ul>
+      </div>
   );
 }
 
