@@ -2,7 +2,7 @@ export interface ITodo {
     tno?: number,
     title: string,
     writer: string,
-    dueDate: string
+    dueDate: string,
   complete: boolean
 }
 

@@ -4,6 +4,8 @@ import { ITodo } from '../../types/todo';
 import PageComponent from '../../common/PageComponent';
 import ModifyComponent from '../todos/TodoModifyComponent';
 import { updateTodo, deleteTodo } from '../../api/todoAPI';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function TodoListComponent() {
   const { pageResponse, moveToRead, loading } = useTodoList();
@@ -125,7 +127,7 @@ function TodoListComponent() {
           <td className="border-b border-[#eee] py-5 px-4 text-left">
             <p className={`text-black ${isChecked ? 'line-through' : ''}`}>{new Date(dueDate).toLocaleDateString()}</p>
           </td>
-          <td className="border-b border-[#eee] py-5 px-4 text-left">
+          <td className="border-b border-[#eee] py-5 px-6 text-left">
             <button
                 onClick={(e) => {
                   e.stopPropagation(); // 수정 버튼 클릭 시 이벤트 전파 중지
@@ -133,7 +135,7 @@ function TodoListComponent() {
                 }}
                 className="text-blue-500 hover:text-blue-700 mr-3"
             >
-              Modi
+              <FontAwesomeIcon icon={faPenToSquare} />
             </button>
             <button
                 onClick={(e) => {
@@ -142,7 +144,7 @@ function TodoListComponent() {
                 }}
                 className="text-red-500 hover:text-red-700"
             >
-              Del
+              <FontAwesomeIcon icon={faTrash} />
             </button>
           </td>
         </tr>
@@ -150,10 +152,10 @@ function TodoListComponent() {
   });
 
   return (
-      <div>
-        {/* 체크박스 스타일을 컴포넌트 내 style 태그에 추가 */}
-        <style>
-          {`
+    <div>
+      {/* 체크박스 스타일을 컴포넌트 내 style 태그에 추가 */}
+      <style>
+        {`
           /* 체크박스 스타일 */
           .custom-checkbox {
             appearance: none; /* 기본 체크박스 스타일 제거 */
@@ -182,44 +184,53 @@ function TodoListComponent() {
             left: 2px; /* 체크 표시 위치 조정 */
           }
         `}
-        </style>
+      </style>
 
-        <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5">
-          <div className="max-w-full overflow-x-auto">
-            <table className="w-full table-auto">
-              <thead>
-              <tr className="bg-gray-2 text-left">
-                <th className="min-w-[50px] py-4 px-4 text-center"> {/* 체크박스 열 */}</th>
-                <th className="min-w-[80px] py-4 px-4 text-center">No.</th>
-                <th className="min-w-[220px] py-4 px-4 text-left">Title</th>
-                <th className="min-w-[150px] py-4 px-4 text-left">Writer</th>
-                <th className="py-4 px-4 text-left">Duedate</th>
-                <th className="py-4 px-4 text-left">Modi/Del</th>
-              </tr>
-              </thead>
-              <tbody>{listLI}</tbody>
-            </table>
-          </div>
-          {!loading && (
-              <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('페이지 변경:', page)} />
-          )}
+      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5">
+        <div className="max-w-full overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+            <tr className="bg-gray-2 text-left">
+              <th className="min-w-[50px] py-4 px-4 text-center"> {/* 체크박스 열 */}</th>
+              <th className="min-w-[80px] py-4 px-4 text-center">No.</th>
+              <th className="min-w-[220px] py-4 px-4 text-left">Title</th>
+              <th className="min-w-[150px] py-4 px-4 text-left">Writer</th>
+              <th className="py-4 px-4 text-left">Deadline</th>
+              <th className="py-4 px-4 text-left">Edit/Del</th>
+            </tr>
+            </thead>
+            <tbody>{listLI}</tbody>
+          </table>
         </div>
-
-        {isModifyModalOpen && selectedTodo && (
-            <ModifyComponent todo={selectedTodo} onUpdate={handleUpdateTodo} onClose={closeModifyModal} />
+        {!loading && (
+          <PageComponent pageResponse={pageResponse} changePage={(page) => console.log('페이지 변경:', page)} />
         )}
+      </div>
 
-        {isDeleteModalOpen && selectedTodo && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-              <div className="bg-white p-6 rounded-md shadow-md">
-                <h2 className="text-lg font-semibold mb-4">정말로 삭제하시겠습니까?</h2>
-                <div className="flex justify-end">
-                  <button onClick={handleDeleteTodo} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-black rounded">
-                    Delete
-                  </button>
-                  <button onClick={closeDeleteModal} className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded">
-                    Cancel
-                  </button>
+      {isModifyModalOpen && selectedTodo && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-md shadow-md">
+            <div className="flex justify-end">
+              <ModifyComponent todo={selectedTodo} onUpdate={handleUpdateTodo} onClose={closeModifyModal} />
+            </div>
+          </div>
+        </div>
+  )
+}
+
+{
+  isDeleteModalOpen && selectedTodo && (
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-md shadow-md">
+        <h2 className="text-lg font-semibold mb-4">정말로 삭제하시겠습니까?</h2>
+        <div className="flex justify-end">
+          <button onClick={handleDeleteTodo} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-black rounded">
+            Delete
+          </button>
+          <button onClick={closeDeleteModal}
+                  className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-black rounded">
+            Cancel
+          </button>
                 </div>
               </div>
             </div>

@@ -27,7 +27,11 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClo
     }));
   };
 
+
   const handleSave = () => {
+=======
+    const handleSave = () => {
+
     onUpdate(updatedTodo);
     onClose();
   };
@@ -68,7 +72,7 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClo
 
 
             <div className="flex items-center space-x-4">
-              <label className="w-24 text-right">Due Date:</label>
+              <label className="w-24 text-right">Deadline:</label>
               <input
                   type="date"
                   name="dueDate"

@@ -20,8 +20,8 @@ const Todo = () => {
 
           <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
             <div className="mt-4">
-              <h3 className="mb-1.5 text-4xl font-semibold text-black dark:text-white">
-                My Todo List
+              <h3 className="mt-10 mb-1.5 text-4xl font-semibold text-black dark:text-white">
+                MY TODO LIST
               </h3>
               <TodoListPage/>
 
