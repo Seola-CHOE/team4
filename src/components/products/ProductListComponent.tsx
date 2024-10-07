@@ -18,7 +18,6 @@ const initialState = {
 }
 
 function ProductListComponent() {
-  const navigate = useNavigate();
 
   const [pageResponse, setPageResponse] = useState<IPageResponse>({...initialState});
 
@@ -43,6 +42,7 @@ function ProductListComponent() {
       const response = await getProductList(page);
       setPageResponse(response); // 응답 데이터를 pageResponse에 직접 설정
       console.log(response);
+      setProductList(response.dtoList); // Assuming dtoList is the key holding the products
     };
 
     fetchProductList();
