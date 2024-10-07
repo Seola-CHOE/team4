@@ -28,8 +28,7 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClo
   };
 
 
-  const handleSave = () => {
-=======
+
     const handleSave = () => {
 
     onUpdate(updatedTodo);
