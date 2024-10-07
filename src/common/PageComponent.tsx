@@ -82,7 +82,7 @@ function PageComponent({ pageResponse, changePage }: Props): ReactElement {
               <li
                   className="px-4 py-2 text-white bg-primary border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all ease-in-out duration-300 cursor-pointer"
                   key="prev" // key 값은 고유한 문자열로 설정
-                  onClick={() => handleChangePage(currentPage - 1)} // 이전 페이지로 이동
+                  onClick={() => handleChangePage(Math.floor((currentPage - 1) / 10) * 10 - 9)} // 이전 페이지로 이동
               >
                 Prev
               </li>
@@ -104,7 +104,7 @@ function PageComponent({ pageResponse, changePage }: Props): ReactElement {
               <li
                   className="px-4 py-2 text-white bg-primary border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all ease-in-out duration-300 cursor-pointer"
                   key="next" // key 값은 고유한 문자열로 설정
-                  onClick={() => handleChangePage(currentPage + 1)} // 다음 페이지로 이동
+                  onClick={() => handleChangePage(Math.floor((currentPage - 1) / 10) * 10 + 11)}// 다음 페이지로 이동
               >
                 Next
               </li>
