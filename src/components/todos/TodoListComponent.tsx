@@ -245,7 +245,7 @@ function TodoListComponent() {
             <div className="flex justify-end">
               <button
                 onClick={handleDeleteTodo}
-                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded mr-4"
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-black rounded mr-4"
               >
                 Delete
               </button>
