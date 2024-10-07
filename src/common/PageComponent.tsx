@@ -90,7 +90,7 @@ function PageComponent({ pageResponse, changePage }: Props): ReactElement {
         {/* 페이지 번호 리스트 렌더링 */}
         {pageNumbers.map((num) => (
           <li
-            className={`px-4 py-2 ${num === currentPage ? 'bg-blue-700' : 'bg-primary'} text-white border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300`}
+            className={`px-4 py-2 ${num === currentPage ? 'bg-primary' : 'bg-primary'} text-white border border-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300`}
             key={num}
             onClick={() => handleChangePage(num)} // 각 페이지 번호 클릭 시 해당 페이지로 이동
           >
