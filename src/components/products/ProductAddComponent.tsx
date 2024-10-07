@@ -13,8 +13,6 @@ const initialState = {
     del_flag: false
 }
 
-
-
 function ProductAddComponent() {
 
     const [product, setProduct] = useState<IProduct>({...initialState})

@@ -11,7 +11,7 @@ import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 function TodoListComponent() {
   // 상태 변수 정의
-  const { pageResponse, moveToRead, loading } = useTodoList();
+  const { pageResponse, moveToRead, loading} = useTodoList();
   const [todos, setTodos] = useState<ITodo[]>([]); // 할 일 목록
   const [isModifyModalOpen, setModifyModalOpen] = useState<boolean>(false); // 수정 모달 열기 여부
   const [isDeleteModalOpen, setDeleteModalOpen] = useState<boolean>(false); // 삭제 모달 열기 여부
@@ -221,7 +221,6 @@ function TodoListComponent() {
           <PageComponent
             pageResponse={pageResponse}
             changePage={(page) => {
-              // 페이지 변경 시 새로운 데이터를 가져오기 위해 API 호출
             }}
           />
         )}
