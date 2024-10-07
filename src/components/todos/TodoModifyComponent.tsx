@@ -27,11 +27,7 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClo
     }));
   };
 
-
   const handleSave = () => {
-=======
-    const handleSave = () => {
-
     onUpdate(updatedTodo);
     onClose();
   };
@@ -40,7 +36,7 @@ const ModifyComponent: React.FC<ModifyComponentProps> = ({ todo, onUpdate, onClo
       <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
         <div className="bg-white p-6 rounded-lg shadow-lg w-96">
 
-          <h2 className="text-xl font-semibold mb-4">Modify Todo</h2>
+          <h2 className="text-xl font-semibold mb-4">MODIFY TODO</h2>
 
 
           <div className="flex flex-col space-y-4">
